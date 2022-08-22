@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:noteapp/service/api_service.dart';
+import 'package:noteapp/utils/app_color.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -17,7 +18,10 @@ class _LoginPageState extends State<LoginPage> {
           onPressed: () {
             Api_Service.addUser();
           },
-          child: Text("Test"),
+          child: Text(
+            "Test",
+            style: TextStyle(color: AppColors.branchColor),
+          ),
         ),
       ),
     );
