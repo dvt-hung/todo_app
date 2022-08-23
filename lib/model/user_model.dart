@@ -28,6 +28,7 @@ class UserModel {
     this.phone,
     this.address,
   });
+
   UserModel.fromJson(dynamic json) {
     name = json['name'] ?? '';
     uuid = json['uuid'] ?? '';
