@@ -16,11 +16,13 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: TextButton(
           onPressed: () {
-            Api_Service.addUser();
+            Api_Service.registerEmail("hungdiep2@gmail.com", "123456",(msg){
+              print(msg);
+            });
           },
-          child: Text(
+          child: const Text(
             "Test",
-            style: TextStyle(color: AppColors.branchColor),
+            style: TextStyle(color: Colors.amber),
           ),
         ),
       ),
