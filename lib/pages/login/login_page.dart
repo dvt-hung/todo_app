@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:noteapp/service/api_service.dart';
-import 'package:noteapp/utils/app_color.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -16,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: TextButton(
           onPressed: () {
-            Api_Service.registerEmail("hungdiep2@gmail.com", "123456",(msg){
+            Api_Service.registerEmail("hungdiep2@gmail.com", "123456", (msg) {
               print(msg);
             });
           },

@@ -13,7 +13,7 @@
 //   set setIdUser(String id) => idUser = id;
 // }
 
-class UserModel{
+class UserModel {
   String? name;
   String? uuid;
   String? userId;
@@ -35,7 +35,6 @@ class UserModel{
     email = json['email'] ?? '';
     phone = json['phone'] ?? '';
     address = json['address'] ?? '';
-
   }
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -47,5 +46,4 @@ class UserModel{
     map['address'] = address;
     return map;
   }
-
 }
