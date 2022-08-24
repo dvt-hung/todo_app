@@ -44,6 +44,7 @@ class Textfieldcomponent extends StatelessWidget {
               },
               child: suffxIcon),
           border: OutlineInputBorder(
+            borderSide: BorderSide(color: color!),
             borderRadius: BorderRadius.circular(10),
           ),
           labelText: labelText,
