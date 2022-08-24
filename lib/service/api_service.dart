@@ -61,19 +61,18 @@ class Api_Service {
   // Sign in with Email vs Password
   static void signIn(String email, String password, Function callBack) async {
     try {
-      final credential = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
+      // If login success
       if (check()) {
-        callBack("Login Success");
-      } else {
-        callBack("Login Failed");
+        callBack("Login success");
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        callBack('No user found for that email.');
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+        callBack('Wrong password provided for that user.');
       }
     }
   }
