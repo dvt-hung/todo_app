@@ -8,6 +8,7 @@ class Bunttoncomponent extends StatelessWidget {
   var colorButton;
   double? height;
   double? radius;
+  VoidCallback onTap;
 
   Bunttoncomponent(
       {Key? key,
@@ -15,6 +16,7 @@ class Bunttoncomponent extends StatelessWidget {
       required this.fontSize,
       required this.colorText,
       required this.colorButton,
+      required this.onTap,
       this.height = 50,
       onHide})
       : super(key: key);
@@ -32,7 +34,7 @@ class Bunttoncomponent extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: colorText),
         ),
-        onPressed: null,
+        onPressed: onTap,
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(colorButton)),
       ),
