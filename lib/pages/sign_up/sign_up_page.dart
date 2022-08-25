@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:noteapp/components/component_sign_in_sign_up/buntton_component.dart';
 import 'package:noteapp/components/component_sign_in_sign_up/text_rich_component.dart';
 import 'package:noteapp/components/component_sign_in_sign_up/textfield_component.dart';
+
 import 'package:noteapp/utils/app_color.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -14,6 +15,105 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   bool isShow1 = false;
   bool isShow2 = false;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //       resizeToAvoidBottomInset: false,
+  //       backgroundColor: AppColor.thirdColor,
+  //       body: Padding(
+  //         padding:
+  //             const EdgeInsets.symmetric(vertical: 100.0, horizontal: 20.0),
+  //         child: Column(
+  //           children: [
+  //             const Text("sadadasd"),
+  //             //Email TextField
+  //             Textfieldcomponent(
+  //               height: 50.0,
+  //               prefixIcon: const Icon(Icons.email),
+  //               suffxIcon: const Icon(Icons.person),
+  //               obscureText: false,
+  //               hintText: "Sign up your Email:",
+  //               labelText: "Email:",
+  //             ),
+  //             const SizedBox(
+  //               height: 30,
+  //             ),
+  //             //Password TextField1
+  //             Textfieldcomponent(
+  //               height: 50.0,
+  //               prefixIcon: const Icon(Icons.lock),
+  //               suffxIcon: const Icon(
+  //                 Icons.remove_red_eye,
+  //               ),
+  //               obscureText: !isShow1,
+  //               onHide: () {
+  //                 setState(() {
+  //                   isShow1 = !isShow1;
+  //                 });
+  //               },
+  //               labelText: 'Password:',
+  //               hintText: 'Sign up your Password:',
+  //             ),
+  //             const SizedBox(
+  //               height: 30,
+  //             ),
+  //             //Password TextField2
+  //             Textfieldcomponent(
+  //               height: 50.0,
+  //               prefixIcon: const Icon(Icons.lock),
+  //               suffxIcon: const Icon(
+  //                 Icons.remove_red_eye,
+  //               ),
+  //               obscureText: !isShow2,
+  //               onHide: () {
+  //                 setState(() {
+  //                   isShow2 = !isShow2;
+  //                 });
+  //               },
+  //               labelText: 'Password:',
+  //               hintText: 'Confirm your Password:',
+  //             ),
+
+  //             const SizedBox(
+  //               height: 90.0,
+  //             ),
+  //             //Button
+  //             Bunttoncomponent(
+  //                 height: 60.0,
+  //                 fontSize: 20,
+  //                 colorText: AppColor.secondColor,
+  //                 colorButton: AppColor.thirdColor,
+  //                 textButton: 'Sign Up',
+  //                 onTap: () {
+
+  //                 }),
+
+  //             const SizedBox(
+  //               height: 30.0,
+  //             ),
+
+  //             //Text
+  //             Expanded(
+  //               child: GestureDetector(
+  //                 onTap: onClickSignIn,
+  //                 child: const TextRichcomponent(
+  //                     colorOne: AppColor.secondColor,
+  //                     colorTwo: AppColor.secondColor,
+  //                     fontWeightOne: FontWeight.normal,
+  //                     fontWeightTwo: FontWeight.bold,
+  //                     textOne: 'I already have an account!',
+  //                     textTwo: ' Sign In'),
+  //               ),
+  //             )
+  //           ],
+  //         ),
+  //       ));
+  // }
 
   onClickSignIn() {
     setState(() {
@@ -123,6 +223,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 colorText: AppColor.secondColor,
                 colorButton: AppColor.thirdColor,
                 textButton: 'Sign Up',
+                onTap: () {},
               ),
             ),
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:noteapp/utils/app_color.dart';
 
 class Textfieldcomponent extends StatelessWidget {
-  String labelText;
+  String? labelText;
   String hintText;
   bool obscureText;
   Icon? prefixIcon;
@@ -10,14 +10,15 @@ class Textfieldcomponent extends StatelessWidget {
   VoidCallback? onHide;
   double? height;
   Color? color;
-
+  // TextEditingController controller;
   // var icons_suffix;
   // var icons_suffix;
   Textfieldcomponent(
       {Key? key,
       required this.hintText,
-      required this.labelText,
+      this.labelText,
       required this.obscureText,
+      // required this.controller,
       this.prefixIcon,
       this.suffxIcon,
       this.height = 40.0,
@@ -30,6 +31,7 @@ class Textfieldcomponent extends StatelessWidget {
     return SizedBox(
       height: height,
       child: TextField(
+        // controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(

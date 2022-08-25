@@ -22,6 +22,8 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   bool isShow = false;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,6 +67,7 @@ class _SignInState extends State<SignIn> {
                   children: [
                     //Email TextField
                     Textfieldcomponent(
+                      // controller: emailController,
                       height: 50.0,
                       prefixIcon: Icon(Icons.email),
                       suffxIcon: Icon(Icons.person),
@@ -77,6 +80,7 @@ class _SignInState extends State<SignIn> {
                     ),
                     //Password TextField
                     Textfieldcomponent(
+                      // controller: passwordController,
                       height: 50.0,
                       prefixIcon: Icon(Icons.lock),
                       suffxIcon: Icon(
@@ -100,6 +104,7 @@ class _SignInState extends State<SignIn> {
                       colorText: AppColor.thirdColor,
                       colorButton: AppColor.secondColor,
                       textButton: 'Sign In',
+                      onTap: () {},
                     ),
                     //Text: SignIn
                     SizedBox(
