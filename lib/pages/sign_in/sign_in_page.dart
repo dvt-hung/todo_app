@@ -1,10 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
+import 'package:noteapp/components/component_sign_in_sign_up/buntton_component.dart';
+import 'package:noteapp/components/component_sign_in_sign_up/text_rich_component.dart';
+import 'package:noteapp/components/component_sign_in_sign_up/textfield_component.dart';
 import 'package:noteapp/utils/app_color.dart';
 
-import '../../components/components_sign_in_sign_up/buntton_component.dart';
-import '../../components/components_sign_in_sign_up/textfield_component.dart';
-import '../../components/components_sign_in_sign_up/text_rich_component.dart';
 import '../sign_up/sign_up_page.dart';
 
 String errorMessEmail = 'Invalid email';
@@ -38,17 +38,20 @@ class _SignInState extends State<SignIn> {
                   child: //Text_Login
                       Padding(
                     padding: const EdgeInsets.fromLTRB(30, 150, 30, 0),
-                    child: Text(
-                      'Login🙂\nWelcome back!',
-                      style: TextStyle(
-                          letterSpacing: 2.5,
-                          fontSize: 35,
-                          fontWeight: FontWeight.bold,
-                          color: AppColor.thirdColor),
-                    ),
+                    child: const TextRichcomponent(
+                        fontSize: 35,
+                        colorOne: AppColor.thirdColor,
+                        colorTwo: AppColor.thirdColor,
+                        fontWeightOne: FontWeight.bold,
+                        fontWeightTwo: FontWeight.normal,
+                        textOne: 'Sign In 😊',
+                        textTwo: ' \nLet\'s get stared now!'),
                   ),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30),
+                      ),
                       color: AppColor.secondColor),
                 ),
                 Expanded(
@@ -64,26 +67,26 @@ class _SignInState extends State<SignIn> {
                   children: [
                     //Email TextField
                     Textfieldcomponent(
-                      controller: emailController,
+                      // controller: emailController,
                       height: 50.0,
                       prefixIcon: Icon(Icons.email),
                       suffxIcon: Icon(Icons.person),
                       obscureText: false,
                       labelText: 'Email',
-                      hintText: "Enter your Password:",
+                      hintText: "Enter your Email:",
                     ),
                     SizedBox(
                       height: 30,
                     ),
                     //Password TextField
                     Textfieldcomponent(
-                      controller: passwordController,
+                      // controller: passwordController,
                       height: 50.0,
                       prefixIcon: Icon(Icons.lock),
                       suffxIcon: Icon(
                         Icons.remove_red_eye,
                       ),
-                      obscureText: isShow,
+                      obscureText: !isShow,
                       onHide: () {
                         setState(() {
                           isShow = !isShow;
@@ -112,7 +115,7 @@ class _SignInState extends State<SignIn> {
                       child: TextRichcomponent(
                           colorOne: AppColor.primaryColor,
                           fontWeightOne: FontWeight.normal,
-                          textOne: 'Dont have account?',
+                          textOne: 'Don\'t have account?',
                           fontWeightTwo: FontWeight.bold,
                           textTwo: ' Sign Up'),
                     )
