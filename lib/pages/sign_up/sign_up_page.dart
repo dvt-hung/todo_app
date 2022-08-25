@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/components/component_sign_in_sign_up/buntton_component.dart';
-import 'package:noteapp/components/component_sign_in_sign_up/text_rich_component.dart';
-import 'package:noteapp/components/component_sign_in_sign_up/textfield_component.dart';
-
+import 'package:noteapp/components/buntton_component.dart';
+import 'package:noteapp/components/text_rich_component.dart';
+import 'package:noteapp/components/textfield_component.dart';
 import 'package:noteapp/utils/app_color.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -124,8 +123,8 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: AppColor.secondColor,
-      resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Column(
           children: [
