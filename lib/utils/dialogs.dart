@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Dialogs {
+  static SnackBar mySnackBar(String content) {
+    return SnackBar(content: Text(content));
+  }
+
   static showMyDialog(
       BuildContext context, String title, String content) async {
     return showDialog<void>(
@@ -18,7 +22,7 @@ class Dialogs {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Ok'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },

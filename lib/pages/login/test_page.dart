@@ -4,6 +4,7 @@ import 'package:noteapp/model/note_model.dart';
 import 'package:noteapp/model/user_model.dart';
 import 'package:noteapp/service/api_service.dart';
 import 'package:noteapp/utils/app_color.dart';
+import 'package:noteapp/utils/singleton.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -34,9 +35,9 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             TextButton(
               onPressed: () {
-                Api_Service.signIn(email, password, (e) {
-                  print(e);
-                });
+                // Api_Service.signIn(email, password, (e) {
+                //   print(e);
+                // });
               },
               child: const Text(
                 "Sign in",
@@ -45,9 +46,9 @@ class _LoginPageState extends State<LoginPage> {
             ),
             TextButton(
               onPressed: () {
-                Api_Service.registerEmail(email, password, (e) {
-                  // print(e);
-                });
+                // Api_Service.registerEmail(email, password, (e) {
+                //   // print(e);
+                // });
               },
               child: const Text(
                 "Sign up",
@@ -56,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             TextButton(
               onPressed: () {
-                Api_Service.signOut();
+                Singleton().logOut();
               },
               child: const Text(
                 "Sign out",

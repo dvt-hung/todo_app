@@ -2,119 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:noteapp/components/component_sign_in_sign_up/buntton_component.dart';
 import 'package:noteapp/components/component_sign_in_sign_up/text_rich_component.dart';
 import 'package:noteapp/components/component_sign_in_sign_up/textfield_component.dart';
+import 'package:noteapp/service/api_service.dart';
 
 import 'package:noteapp/utils/app_color.dart';
+import 'package:noteapp/utils/dialogs.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<SignUpPage> createState() => SignUpPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class SignUpPageState extends State<SignUpPage> {
+  bool isPass = true;
   bool isShow1 = false;
   bool isShow2 = false;
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //       resizeToAvoidBottomInset: false,
-  //       backgroundColor: AppColor.thirdColor,
-  //       body: Padding(
-  //         padding:
-  //             const EdgeInsets.symmetric(vertical: 100.0, horizontal: 20.0),
-  //         child: Column(
-  //           children: [
-  //             const Text("sadadasd"),
-  //             //Email TextField
-  //             Textfieldcomponent(
-  //               height: 50.0,
-  //               prefixIcon: const Icon(Icons.email),
-  //               suffxIcon: const Icon(Icons.person),
-  //               obscureText: false,
-  //               hintText: "Sign up your Email:",
-  //               labelText: "Email:",
-  //             ),
-  //             const SizedBox(
-  //               height: 30,
-  //             ),
-  //             //Password TextField1
-  //             Textfieldcomponent(
-  //               height: 50.0,
-  //               prefixIcon: const Icon(Icons.lock),
-  //               suffxIcon: const Icon(
-  //                 Icons.remove_red_eye,
-  //               ),
-  //               obscureText: !isShow1,
-  //               onHide: () {
-  //                 setState(() {
-  //                   isShow1 = !isShow1;
-  //                 });
-  //               },
-  //               labelText: 'Password:',
-  //               hintText: 'Sign up your Password:',
-  //             ),
-  //             const SizedBox(
-  //               height: 30,
-  //             ),
-  //             //Password TextField2
-  //             Textfieldcomponent(
-  //               height: 50.0,
-  //               prefixIcon: const Icon(Icons.lock),
-  //               suffxIcon: const Icon(
-  //                 Icons.remove_red_eye,
-  //               ),
-  //               obscureText: !isShow2,
-  //               onHide: () {
-  //                 setState(() {
-  //                   isShow2 = !isShow2;
-  //                 });
-  //               },
-  //               labelText: 'Password:',
-  //               hintText: 'Confirm your Password:',
-  //             ),
-
-  //             const SizedBox(
-  //               height: 90.0,
-  //             ),
-  //             //Button
-  //             Bunttoncomponent(
-  //                 height: 60.0,
-  //                 fontSize: 20,
-  //                 colorText: AppColor.secondColor,
-  //                 colorButton: AppColor.thirdColor,
-  //                 textButton: 'Sign Up',
-  //                 onTap: () {
-
-  //                 }),
-
-  //             const SizedBox(
-  //               height: 30.0,
-  //             ),
-
-  //             //Text
-  //             Expanded(
-  //               child: GestureDetector(
-  //                 onTap: onClickSignIn,
-  //                 child: const TextRichcomponent(
-  //                     colorOne: AppColor.secondColor,
-  //                     colorTwo: AppColor.secondColor,
-  //                     fontWeightOne: FontWeight.normal,
-  //                     fontWeightTwo: FontWeight.bold,
-  //                     textOne: 'I already have an account!',
-  //                     textTwo: ' Sign In'),
-  //               ),
-  //             )
-  //           ],
-  //         ),
-  //       ));
-  // }
-
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController passwordConfirmController = TextEditingController();
   onClickSignIn() {
     setState(() {
       Navigator.of(context).pop(true);
@@ -161,6 +67,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 30),
                         child: Textfieldcomponent(
+                          controller: emailController,
                           height: 50.0,
                           prefixIcon: const Icon(Icons.email),
                           suffxIcon: const Icon(Icons.person),
@@ -174,12 +81,13 @@ class _SignUpPageState extends State<SignUpPage> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 30),
                         child: Textfieldcomponent(
+                          controller: passwordController,
                           height: 50.0,
                           prefixIcon: const Icon(Icons.lock),
                           suffxIcon: const Icon(
                             Icons.remove_red_eye,
                           ),
-                          obscureText: isShow1,
+                          obscureText: !isShow1,
                           onHide: () {
                             setState(() {
                               isShow1 = !isShow1;
@@ -191,14 +99,20 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       //TEXTFIELD PASSWORD CONFIRM
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 30),
+                        padding: const EdgeInsets.only(bottom: 0),
                         child: Textfieldcomponent(
+                          onChanged: (value) {
+                            setState(() {
+                              isPass = checkPassword(value);
+                            });
+                          },
+                          controller: passwordConfirmController,
                           height: 50.0,
                           prefixIcon: const Icon(Icons.lock),
                           suffxIcon: const Icon(
                             Icons.remove_red_eye,
                           ),
-                          obscureText: isShow2,
+                          obscureText: !isShow2,
                           onHide: () {
                             setState(() {
                               isShow2 = !isShow2;
@@ -208,6 +122,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           hintText: 'Confirm your Password:',
                         ),
                       ),
+                      Text(isPass ? " Đúng " : "Sai"),
                     ],
                   ),
                 )
@@ -223,7 +138,13 @@ class _SignUpPageState extends State<SignUpPage> {
                 colorText: AppColor.secondColor,
                 colorButton: AppColor.thirdColor,
                 textButton: 'Sign Up',
-                onTap: () {},
+                onTap: () {
+                  String email = emailController.text;
+                  String password = passwordController.text;
+                  String passwordConfirm = passwordConfirmController.text;
+
+                  signUpAccount(email, password, passwordConfirm);
+                },
               ),
             ),
 
@@ -245,5 +166,45 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
+  }
+
+  void signUpAccount(String email, String password, String passwordConfirm) {
+    if (email.isEmpty || password.isEmpty || passwordConfirm.isEmpty) {
+      Dialogs.showMyDialog(context, "Thông báo", "Dữ liệu đang bị trống");
+    } else if (password != passwordConfirm) {
+      Dialogs.showMyDialog(context, "Thông báo", "Mật khẩu không trùng khớp");
+    } else {
+      checkEmailPassword(email, password);
+    }
+  }
+
+  bool checkPassword(String pass) {
+    bool passwordValid =
+        RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$').hasMatch(pass);
+    return passwordValid;
+  }
+
+  void checkEmailPassword(String email, String pass) {
+    // String msg_EmailValid = "Email không hợp lệ";
+    //
+    // // Regex Email
+    // bool emailValid = RegExp(
+    //         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+    //     .hasMatch(email);
+    //
+    //
+    // if (!emailValid) {
+    //   Dialogs.showMyDialog(context, "Thông báo", msg_EmailValid);
+    // }
+    //  else if (emailValid) {
+    //   Api_Service.registerEmail(email, pass, (msg, isSuccess) {
+    //     if (isSuccess) {
+    //       Navigator.pop(context);
+    //       ScaffoldMessenger.of(context).showSnackBar(Dialogs.mySnackBar(msg));
+    //     } else {
+    //       Dialogs.showMyDialog(context, "Thông báo", msg);
+    //     }
+    //   });
+    // }
   }
 }

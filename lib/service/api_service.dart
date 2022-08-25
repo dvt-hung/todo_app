@@ -2,13 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:noteapp/model/note_model.dart';
 import 'package:noteapp/model/user_model.dart';
+import 'package:noteapp/utils/singleton.dart';
 
 final FirebaseAuth auth = FirebaseAuth.instance;
 final db = FirebaseFirestore.instance;
 
 class Api_Service {
   // Register with Email
-  static registerEmail(email, password, callBack) async {
+  static registerEmail(
+      email, password, Function(String smg, bool isSuccess) callBack) async {
     var uid = '';
     try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
@@ -19,13 +21,13 @@ class Api_Service {
       uid = userCredential.user!.uid;
       // Add user -> db
       addUser(uid, email, (msg) {
-        callBack(msg);
+        callBack(msg, true);
       });
       // Register success
 
     } on FirebaseAuthException catch (e) {
       // Register Failed
-      callBack(e);
+      callBack(e.message!, false);
     }
   }
 
@@ -59,27 +61,32 @@ class Api_Service {
   }
 
   // Sign in with Email vs Password
-  static void signIn(String email, String password, Function callBack) async {
+  static void signIn(String email, String password,
+      Function(bool isLogin, String msg) callBack) async {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
+      User? user = FirebaseAuth.instance.currentUser;
       // If login success
       if (check()) {
-        callBack("Login success");
+        getInfoUser(user!.uid, (data) {
+          List<dynamic> listUser = data;
+          listUser.forEach((element) {
+            List<UserModel> users = [];
+            users.add(element.data());
+            Singleton().user = users[0];
+            callBack(true, "Đăng nhập thành công");
+          });
+        }, () {});
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        callBack('No user found for that email.');
+        callBack(false, 'Email chưa được đăng ký');
       } else if (e.code == 'wrong-password') {
-        callBack('Wrong password provided for that user.');
+        callBack(false, 'Mật khẩu không chính xác');
       }
     }
-  }
-
-  // Sign out account
-  static void signOut() async {
-    await FirebaseAuth.instance.signOut();
   }
 
 // Check account
@@ -135,5 +142,25 @@ class Api_Service {
     noteRef.update(
       {"address": user.address, "name": user.name, "phone": user.phone},
     ).then((value) => callBack("Success"), onError: (e) => callBack(e));
+  }
+
+  static Future<List<QueryDocumentSnapshot<UserModel>>> getInfoUser(
+    String userId,
+    Function finish,
+    Function catchError,
+  ) async {
+    List<QueryDocumentSnapshot<UserModel>> user = await db
+        .collection("users")
+        .withConverter<UserModel>(
+          fromFirestore: (snapshot, _) => UserModel.fromJson(snapshot.data()!),
+          toFirestore: (appointment, _) => appointment.toJson(),
+        )
+        .where("userId", isEqualTo: userId)
+        .get()
+        .then((snapshot) => snapshot.docs)
+        .catchError((error) => catchError(error));
+
+    finish(user);
+    return user;
   }
 }

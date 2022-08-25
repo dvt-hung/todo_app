@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:noteapp/components/component_sign_in_sign_up/buntton_component.dart';
 import 'package:noteapp/components/component_sign_in_sign_up/text_rich_component.dart';
 import 'package:noteapp/components/component_sign_in_sign_up/textfield_component.dart';
+import 'package:noteapp/pages/home_page/home_page.dart';
+import 'package:noteapp/service/api_service.dart';
 import 'package:noteapp/utils/app_color.dart';
+import 'package:noteapp/utils/dialogs.dart';
 
 import '../sign_up/sign_up_page.dart';
 
@@ -27,102 +30,114 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColor.thirdColor,
-        body: Stack(
-          children: [
-            Column(
-              children: [
-                Container(
-                  height: 300.0,
-                  width: double.infinity,
-                  child: //Text_Login
-                      Padding(
-                    padding: const EdgeInsets.fromLTRB(30, 150, 30, 0),
-                    child: const TextRichcomponent(
-                        fontSize: 35,
-                        colorOne: AppColor.thirdColor,
-                        colorTwo: AppColor.thirdColor,
-                        fontWeightOne: FontWeight.bold,
-                        fontWeightTwo: FontWeight.normal,
-                        textOne: 'Sign In 😊',
-                        textTwo: ' \nLet\'s get stared now!'),
-                  ),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(30),
-                        bottomRight: Radius.circular(30),
-                      ),
-                      color: AppColor.secondColor),
+      backgroundColor: AppColor.thirdColor,
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              Container(
+                height: 300.0,
+                width: double.infinity,
+                child: //Text_Login
+                    Padding(
+                  padding: const EdgeInsets.fromLTRB(30, 150, 30, 0),
+                  child: const TextRichcomponent(
+                      fontSize: 35,
+                      colorOne: AppColor.thirdColor,
+                      colorTwo: AppColor.thirdColor,
+                      fontWeightOne: FontWeight.bold,
+                      fontWeightTwo: FontWeight.normal,
+                      textOne: 'Sign In 😊',
+                      textTwo: ' \nLet\'s get stared now!'),
                 ),
-                Expanded(
-                  child: Container(),
-                )
-              ],
-            ),
-            Positioned(
-                top: 370.0,
-                right: 30,
-                left: 30,
-                child: Column(
-                  children: [
-                    //Email TextField
-                    Textfieldcomponent(
-                      // controller: emailController,
-                      height: 50.0,
-                      prefixIcon: Icon(Icons.email),
-                      suffxIcon: Icon(Icons.person),
-                      obscureText: false,
-                      labelText: 'Email',
-                      hintText: "Enter your Email:",
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(30),
+                      bottomRight: Radius.circular(30),
                     ),
-                    SizedBox(
-                      height: 30,
+                    color: AppColor.secondColor),
+              ),
+              Expanded(
+                child: Container(),
+              )
+            ],
+          ),
+          Positioned(
+              top: 370.0,
+              right: 30,
+              left: 30,
+              child: Column(
+                children: [
+                  //Email TextField
+                  Textfieldcomponent(
+                    controller: emailController,
+                    height: 50.0,
+                    prefixIcon: Icon(Icons.email),
+                    suffxIcon: Icon(Icons.person),
+                    obscureText: false,
+                    labelText: 'Email',
+                    hintText: "Enter your Email:",
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  //Password TextField
+                  Textfieldcomponent(
+                    controller: passwordController,
+                    height: 50.0,
+                    prefixIcon: Icon(Icons.lock),
+                    suffxIcon: Icon(
+                      Icons.remove_red_eye,
                     ),
-                    //Password TextField
-                    Textfieldcomponent(
-                      // controller: passwordController,
-                      height: 50.0,
-                      prefixIcon: Icon(Icons.lock),
-                      suffxIcon: Icon(
-                        Icons.remove_red_eye,
-                      ),
-                      obscureText: !isShow,
-                      onHide: () {
-                        setState(() {
-                          isShow = !isShow;
-                        });
-                      },
-                      labelText: 'Password',
-                      hintText: 'Enter your Password:',
-                    ),
-                    SizedBox(
-                      height: 50,
-                    ),
-                    //Button
-                    Bunttoncomponent(
-                      fontSize: 20,
-                      colorText: AppColor.thirdColor,
-                      colorButton: AppColor.secondColor,
-                      textButton: 'Sign In',
-                      onTap: () {},
-                    ),
-                    //Text: SignIn
-                    SizedBox(
-                      height: 30,
-                    ),
-                    GestureDetector(
-                      onTap: onTapSignUp,
-                      child: TextRichcomponent(
-                          colorOne: AppColor.primaryColor,
-                          fontWeightOne: FontWeight.normal,
-                          textOne: 'Don\'t have account?',
-                          fontWeightTwo: FontWeight.bold,
-                          textTwo: ' Sign Up'),
-                    )
-                  ],
-                )),
-          ],
-        ));
+                    obscureText: !isShow,
+                    onHide: () {
+                      setState(() {
+                        isShow = !isShow;
+                      });
+                    },
+                    labelText: 'Password',
+                    hintText: 'Enter your Password:',
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  //Button
+                  Bunttoncomponent(
+                    fontSize: 20,
+                    colorText: AppColor.thirdColor,
+                    colorButton: AppColor.secondColor,
+                    textButton: 'Sign In',
+                    onTap: () {
+                      Api_Service.signIn(
+                          emailController.text, passwordController.text,
+                          (isLogin, msg) {
+                        if (isLogin) {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (_) => HomePage()));
+                        } else {
+                          Dialogs.showMyDialog(context, "Thông báo", msg);
+                        }
+                      });
+                    },
+                  ),
+                  //Text: SignIn
+                  SizedBox(
+                    height: 30,
+                  ),
+                  GestureDetector(
+                    onTap: onTapSignUp,
+                    child: TextRichcomponent(
+                        colorOne: AppColor.primaryColor,
+                        fontWeightOne: FontWeight.normal,
+                        textOne: 'Don\'t have account?',
+                        fontWeightTwo: FontWeight.bold,
+                        textTwo: ' Sign Up'),
+                  )
+                ],
+              )),
+        ],
+      ),
+    );
   }
 
   onTapSignUp() {

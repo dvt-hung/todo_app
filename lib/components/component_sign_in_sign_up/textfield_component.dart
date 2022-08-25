@@ -10,15 +10,17 @@ class Textfieldcomponent extends StatelessWidget {
   VoidCallback? onHide;
   double? height;
   Color? color;
-  // TextEditingController controller;
+  TextEditingController controller;
+  ValueChanged<String>? onChanged;
   // var icons_suffix;
   // var icons_suffix;
   Textfieldcomponent(
       {Key? key,
+      this.onChanged,
       required this.hintText,
       this.labelText,
       required this.obscureText,
-      // required this.controller,
+      required this.controller,
       this.prefixIcon,
       this.suffxIcon,
       this.height = 40.0,
@@ -31,8 +33,9 @@ class Textfieldcomponent extends StatelessWidget {
     return SizedBox(
       height: height,
       child: TextField(
-        // controller: controller,
+        controller: controller,
         obscureText: obscureText,
+        onChanged: onChanged,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: color!),
