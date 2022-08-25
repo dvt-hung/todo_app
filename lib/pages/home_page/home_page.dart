@@ -2,6 +2,7 @@
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+
 import 'package:noteapp/pages/home_page/screens_in_home_page/add_note_screen.dart';
 import 'package:noteapp/pages/home_page/screens_in_home_page/home_screen.dart';
 import 'package:noteapp/pages/home_page/screens_in_home_page/profile_screen.dart';

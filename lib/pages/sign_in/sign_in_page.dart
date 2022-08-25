@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:noteapp/components/buntton_component.dart';
 import 'package:noteapp/components/text_rich_component.dart';
 import 'package:noteapp/components/textfield_component.dart';
@@ -14,7 +15,8 @@ class SignInpage extends StatefulWidget {
 
 class _SignInpageState extends State<SignInpage> {
   bool isShow = false;
-
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -55,7 +57,7 @@ class _SignInpageState extends State<SignInpage> {
                     ),
                     //EMAIL TEXTFIELD
                     Textfieldcomponent(
-                      // controller: emailController,
+                      controller: emailController,
                       height: 50.0,
                       prefixIcon: const Icon(Icons.email),
                       suffxIcon: const Icon(Icons.person),
@@ -68,7 +70,7 @@ class _SignInpageState extends State<SignInpage> {
                     ),
                     //PASSWORD TEXTFIELD
                     Textfieldcomponent(
-                      // controller: passwordController,
+                      controller: passController,
                       height: 50.0,
                       prefixIcon: const Icon(Icons.lock),
                       suffxIcon: const Icon(
