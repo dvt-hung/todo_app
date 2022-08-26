@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:noteapp/components/buntton_component.dart';
 import 'package:noteapp/components/text_rich_component.dart';
 import 'package:noteapp/components/textfield_component.dart';
+import 'package:noteapp/service/api_service.dart';
 
-import 'package:noteapp/utils/app_color.dart';
+import 'package:noteapp/utils/app_colors.dart';
 import 'package:noteapp/utils/dialogs.dart';
+import 'package:noteapp/utils/validation.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -21,10 +23,32 @@ class SignUpPageState extends State<SignUpPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordConfirmController = TextEditingController();
+
   onClickSignIn() {
     setState(() {
       Navigator.of(context).pop(true);
     });
+  }
+
+  void signUpAccount(String email, String password, String passwordConfirm) {
+    if (email.isEmpty || password.isEmpty || passwordConfirm.isEmpty) {
+      Dialogs.showMyDialog(context, "Thông báo", "Dữ liệu đang bị trống");
+    } else if (password != passwordConfirm) {
+      Dialogs.showMyDialog(context, "Thông báo", "Mật khẩu không trùng khớp");
+    } else if (!Validation.checkEmail(email)) {
+      Dialogs.showMyDialog(context, "Thông báo", "Email không hợp lệ");
+    } else if (!Validation.checkPassword(password)) {
+      Dialogs.showMyDialog(context, "Thông báo", "Mật khẩu không hợp lệ");
+    } else {
+      Api_Service.registerEmail(email, password, (smg, isSuccess) {
+        if (isSuccess) {
+          Navigator.of(context).pop();
+        } else {
+          Dialogs.showMyDialog(context, "Thông báo", smg);
+          Navigator.of(context).pop();
+        }
+      });
+    }
   }
 
   @override
@@ -36,7 +60,7 @@ class SignUpPageState extends State<SignUpPage> {
         child: Column(
           children: [
             SizedBox(
-              height: 570.0,
+              height: 470.0,
               width: double.infinity,
               child: Stack(children: [
                 Container(
@@ -48,7 +72,7 @@ class SignUpPageState extends State<SignUpPage> {
                       )),
                 ),
                 Positioned(
-                  top: 130,
+                  top: 50,
                   left: 30,
                   right: 30,
                   child: Column(
@@ -103,15 +127,12 @@ class SignUpPageState extends State<SignUpPage> {
                         child: Textfieldcomponent(
                           onChanged: (value) {
                             setState(() {
-                              isPass = checkPassword(value);
+                              isPass = Validation.checkPassword(value);
                             });
                           },
                           controller: passwordConfirmController,
                           height: 50.0,
                           prefixIcon: const Icon(Icons.lock),
-                          suffxIcon: const Icon(
-                            Icons.remove_red_eye,
-                          ),
                           obscureText: !isShow2,
                           onHide: () {
                             setState(() {
@@ -122,7 +143,7 @@ class SignUpPageState extends State<SignUpPage> {
                           hintText: 'Confirm your Password:',
                         ),
                       ),
-                      Text(isPass ? " Đúng " : "Sai"),
+                      // Text(isPass ? " Đúng " : "Sai"),
                     ],
                   ),
                 )
@@ -142,8 +163,11 @@ class SignUpPageState extends State<SignUpPage> {
                   String email = emailController.text;
                   String password = passwordController.text;
                   String passwordConfirm = passwordConfirmController.text;
-
-                  signUpAccount(email, password, passwordConfirm);
+                  Dialogs.showProgressDialog(context);
+                  Future.delayed(const Duration(seconds: 2), () {
+                    Navigator.of(context).pop(true);
+                    signUpAccount(email, password, passwordConfirm);
+                  });
                 },
               ),
             ),
@@ -166,45 +190,5 @@ class SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
-  }
-
-  void signUpAccount(String email, String password, String passwordConfirm) {
-    if (email.isEmpty || password.isEmpty || passwordConfirm.isEmpty) {
-      Dialogs.showMyDialog(context, "Thông báo", "Dữ liệu đang bị trống");
-    } else if (password != passwordConfirm) {
-      Dialogs.showMyDialog(context, "Thông báo", "Mật khẩu không trùng khớp");
-    } else {
-      checkEmailPassword(email, password);
-    }
-  }
-
-  bool checkPassword(String pass) {
-    bool passwordValid =
-        RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$').hasMatch(pass);
-    return passwordValid;
-  }
-
-  void checkEmailPassword(String email, String pass) {
-    // String msg_EmailValid = "Email không hợp lệ";
-    //
-    // // Regex Email
-    // bool emailValid = RegExp(
-    //         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-    //     .hasMatch(email);
-    //
-    //
-    // if (!emailValid) {
-    //   Dialogs.showMyDialog(context, "Thông báo", msg_EmailValid);
-    // }
-    //  else if (emailValid) {
-    //   Api_Service.registerEmail(email, pass, (msg, isSuccess) {
-    //     if (isSuccess) {
-    //       Navigator.pop(context);
-    //       ScaffoldMessenger.of(context).showSnackBar(Dialogs.mySnackBar(msg));
-    //     } else {
-    //       Dialogs.showMyDialog(context, "Thông báo", msg);
-    //     }
-    //   });
-    // }
   }
 }

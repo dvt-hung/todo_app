@@ -1,6 +1,26 @@
 import 'package:flutter/material.dart';
 
 class Dialogs {
+  static showProgressDialog(BuildContext context) {
+    //set up the AlertDialog
+    AlertDialog alert = const AlertDialog(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      content: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+    showDialog(
+      //prevent outside touch
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        //prevent Back button press
+        return alert;
+      },
+    );
+  }
+
   static SnackBar mySnackBar(String content) {
     return SnackBar(content: Text(content));
   }

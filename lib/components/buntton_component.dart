@@ -2,20 +2,20 @@
 import 'package:flutter/material.dart';
 
 class Bunttoncomponent extends StatelessWidget {
-  String textButton;
-  double fontSize;
-  var colorText;
-  var colorButton;
+  String? textButton;
+  double? fontSize;
+  Color? colorText;
+  Color? colorButton;
   double? height;
   double? radius;
   VoidCallback onTap;
 
   Bunttoncomponent(
       {Key? key,
-      required this.textButton,
-      required this.fontSize,
-      required this.colorText,
-      required this.colorButton,
+      this.textButton,
+      this.fontSize,
+      this.colorText,
+      this.colorButton,
       required this.onTap,
       this.height = 50,
       onHide})
@@ -28,7 +28,7 @@ class Bunttoncomponent extends StatelessWidget {
       width: double.infinity,
       child: TextButton(
         child: Text(
-          textButton,
+          textButton!,
           style: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/utils/app_color.dart';
+import 'package:noteapp/utils/app_colors.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({Key? key}) : super(key: key);

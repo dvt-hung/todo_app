@@ -3,20 +3,50 @@ import 'package:flutter/material.dart';
 import 'package:noteapp/components/buntton_component.dart';
 import 'package:noteapp/components/text_rich_component.dart';
 import 'package:noteapp/components/textfield_component.dart';
+import 'package:noteapp/pages/home_page/home_page.dart';
 import 'package:noteapp/pages/sign_up/sign_up_page.dart';
-import 'package:noteapp/utils/app_color.dart';
+import 'package:noteapp/service/api_service.dart';
+import 'package:noteapp/utils/app_colors.dart';
+import 'package:noteapp/utils/app_styles.dart';
+import 'package:noteapp/utils/dialogs.dart';
+import 'package:noteapp/utils/singleton.dart';
+import 'package:noteapp/utils/validation.dart';
 
-class SignInpage extends StatefulWidget {
-  const SignInpage({Key? key}) : super(key: key);
+class signInPage extends StatefulWidget {
+  const signInPage({Key? key}) : super(key: key);
 
   @override
-  State<SignInpage> createState() => _SignInpageState();
+  State<signInPage> createState() => _signInPage();
 }
 
-class _SignInpageState extends State<SignInpage> {
+class _signInPage extends State<signInPage> {
+  bool isValidation_Email = false;
+  bool isValidation_Password = false;
   bool isShow = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
+
+  onTapSignUp() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const SignUpPage()));
+  }
+
+  login() {
+    Api_Service.signIn(emailController.text, passController.text,
+        (isLogin, msg) {
+      if (Validation.checkEmail(emailController.text)) {
+        if (isLogin) {
+          Navigator.pop(context);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const HomePage()));
+        } else {
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(Dialogs.mySnackBar(msg));
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -24,6 +54,7 @@ class _SignInpageState extends State<SignInpage> {
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
               height: 250.0,
@@ -51,6 +82,8 @@ class _SignInpageState extends State<SignInpage> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(
                       height: 70.0,
@@ -64,6 +97,26 @@ class _SignInpageState extends State<SignInpage> {
                       obscureText: false,
                       labelText: 'Email',
                       hintText: "Enter your Email:",
+                      onChanged: (value) {
+                        setState(() {
+                          isValidation_Email =
+                              Validation.checkEmail(emailController.text);
+                        });
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 6.0,
+                        left: 10.0,
+                      ),
+                      child: Text(
+                          emailController
+                                  .text.isEmpty // if email empty => Text =  ""
+                              ? ""
+                              : isValidation_Email // if email have value =? Check
+                                  ? ''
+                                  : "Email không hợp lệ",
+                          style: AppStyles.style_error),
                     ),
                     const SizedBox(
                       height: 30.0,
@@ -95,20 +148,28 @@ class _SignInpageState extends State<SignInpage> {
                       colorText: AppColor.thirdColor,
                       colorButton: AppColor.secondColor,
                       textButton: 'Sign In',
-                      onTap: () {},
+                      onTap: () {
+                        Dialogs.showProgressDialog(context);
+                        Future.delayed(const Duration(seconds: 1), () {
+                          login();
+                        });
+                      },
                     ),
+
                     const SizedBox(
                       height: 50,
                     ),
                     //TEXT SIGNUP
-                    GestureDetector(
-                      onTap: onTapSignUp,
-                      child: const TextRichcomponent(
-                          colorOne: AppColor.primaryColor,
-                          fontWeightOne: FontWeight.normal,
-                          fontWeightTwo: FontWeight.bold,
-                          textOne: 'Don\'t have an account?',
-                          textTwo: ' Sign Up'),
+                    Center(
+                      child: GestureDetector(
+                        onTap: onTapSignUp,
+                        child: const TextRichcomponent(
+                            colorOne: AppColor.primaryColor,
+                            fontWeightOne: FontWeight.normal,
+                            fontWeightTwo: FontWeight.bold,
+                            textOne: 'Don\'t have an account?',
+                            textTwo: ' Sign Up'),
+                      ),
                     ),
                     const SizedBox(
                       height: 30,
@@ -121,10 +182,5 @@ class _SignInpageState extends State<SignInpage> {
         ),
       ),
     ));
-  }
-
-  onTapSignUp() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const SignUpPage()));
   }
 }

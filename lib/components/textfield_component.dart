@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/utils/app_color.dart';
+import 'package:noteapp/utils/app_colors.dart';
+import 'package:noteapp/utils/app_styles.dart';
 
 class Textfieldcomponent extends StatelessWidget {
   String? labelText;
-  String hintText;
-  bool obscureText;
+  String? hintText;
+  bool? obscureText;
   Icon? prefixIcon;
   Icon? suffxIcon;
   VoidCallback? onHide;
@@ -12,14 +13,13 @@ class Textfieldcomponent extends StatelessWidget {
   Color? color;
   TextEditingController controller;
   ValueChanged<String>? onChanged;
-  // var icons_suffix;
-  // var icons_suffix;
+
   Textfieldcomponent(
       {Key? key,
       this.onChanged,
-      required this.hintText,
+      this.hintText,
       this.labelText,
-      required this.obscureText,
+      this.obscureText = false,
       required this.controller,
       this.prefixIcon,
       this.suffxIcon,
@@ -34,22 +34,20 @@ class Textfieldcomponent extends StatelessWidget {
       height: height,
       child: TextField(
         controller: controller,
-        obscureText: obscureText,
+        obscureText: obscureText!,
         onChanged: onChanged,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: color!),
           ),
           prefixIcon: prefixIcon,
-          suffixIcon: GestureDetector(
-              onTap: () {
-                if (onHide != null) {
-                  onHide!();
-                }
-              },
-              child: suffxIcon),
+          suffixIcon: suffxIcon != null
+              ? IconButton(
+                  icon: suffxIcon!,
+                  onPressed: onHide,
+                )
+              : const SizedBox.shrink(),
           border: OutlineInputBorder(
-
             borderSide: BorderSide(color: color!),
             borderRadius: BorderRadius.circular(10),
           ),
