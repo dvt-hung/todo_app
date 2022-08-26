@@ -2,7 +2,6 @@
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-
 import 'package:noteapp/pages/home_page/screens_in_home_page/add_note_screen.dart';
 import 'package:noteapp/pages/home_page/screens_in_home_page/home_screen.dart';
 import 'package:noteapp/pages/home_page/screens_in_home_page/profile_screen.dart';
@@ -32,18 +31,19 @@ class _HomePageState extends State<HomePage> {
     ];
 
     return Scaffold(
+      backgroundColor: AppColor.thirdColor,
       appBar: AppBar(
+        centerTitle: true,
         toolbarHeight: 60,
         elevation: 0,
-        backgroundColor: AppColor.thirdColor,
+        backgroundColor: AppColor.secondColor,
         title: Text(
           'Home',
           style: TextStyle(
-              color: AppColor.secondColor,
+              color: AppColor.thirdColor,
               fontSize: 25,
               fontWeight: FontWeight.bold),
         ),
-        centerTitle: true,
       ),
       bottomNavigationBar: CurvedNavigationBar(
         height: 60,
