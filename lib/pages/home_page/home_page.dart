@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:noteapp/pages/home_page/screens_in_home_page/add_note_screen.dart';
 import 'package:noteapp/pages/home_page/screens_in_home_page/home_screen.dart';
 import 'package:noteapp/pages/home_page/screens_in_home_page/profile_screen.dart';
-import 'package:noteapp/utils/app_color.dart';
+import 'package:noteapp/utils/app_colors.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

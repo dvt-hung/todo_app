@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:noteapp/components/buntton_component.dart';
 import 'package:noteapp/components/text_rich_component.dart';
-import 'package:noteapp/utils/app_color.dart';
+import 'package:noteapp/utils/app_colors.dart';
 
 class AddNotescreen extends StatefulWidget {
   const AddNotescreen({Key? key}) : super(key: key);

@@ -3,8 +3,10 @@ import 'package:noteapp/components/buntton_component.dart';
 import 'package:noteapp/components/text_rich_component.dart';
 import 'package:noteapp/components/textfield_component.dart';
 import 'package:noteapp/service/api_service.dart';
-import 'package:noteapp/utils/app_color.dart';
+
+import 'package:noteapp/utils/app_colors.dart';
 import 'package:noteapp/utils/dialogs.dart';
+import 'package:noteapp/utils/validation.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -20,158 +22,11 @@ class SignUpPageState extends State<SignUpPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordConfirmController = TextEditingController();
+
   onClickSignIn() {
     setState(() {
       Navigator.of(context).pop(true);
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: SafeArea(
-        child: Scaffold(
-          resizeToAvoidBottomInset: true,
-          backgroundColor: AppColor.secondColor,
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 570.0,
-                  width: double.infinity,
-                  child: Stack(children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                          color: AppColor.thirdColor,
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(35),
-                            bottomRight: Radius.circular(35),
-                          )),
-                    ),
-                    Positioned(
-                      top: 130,
-                      left: 30,
-                      right: 30,
-                      child: Column(
-                        children: [
-                          //TEXT SIGN UP
-                          const Padding(
-                            padding: EdgeInsets.only(bottom: 50),
-                            child: TextRichcomponent(
-                                fontSize: 34,
-                                textOne: 'Sign Up',
-                                fontWeightTwo: FontWeight.normal,
-                                textTwo: '\nPlease fill full the information'),
-                          ),
-
-                          //TEXTFIELD EMAIL
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 30),
-                            child: Textfieldcomponent(
-                              controller: emailController,
-                              height: 50.0,
-                              prefixIcon: const Icon(Icons.email),
-                              suffxIcon: const Icon(Icons.person),
-                              obscureText: false,
-                              hintText: "Sign up your Email:",
-                              labelText: "Enter Email:",
-                            ),
-                          ),
-
-                          //TEXTFIELD PASSWORD
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 30),
-                            child: Textfieldcomponent(
-                              controller: passwordController,
-                              height: 50.0,
-                              prefixIcon: const Icon(Icons.lock),
-                              suffxIcon: const Icon(
-                                Icons.remove_red_eye,
-                              ),
-                              obscureText: !isShow1,
-                              onHide: () {
-                                setState(() {
-                                  isShow1 = !isShow1;
-                                });
-                              },
-                              labelText: 'Enter Password:',
-                              hintText: 'Sign up your Password:',
-                            ),
-                          ),
-                          //TEXTFIELD PASSWORD CONFIRM
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 0),
-                            child: Textfieldcomponent(
-                              onChanged: (value) {
-                                setState(() {
-                                  isPass = checkPassword(value);
-                                });
-                              },
-                              controller: passwordConfirmController,
-                              height: 50.0,
-                              prefixIcon: const Icon(Icons.lock),
-                              suffxIcon: const Icon(
-                                Icons.remove_red_eye,
-                              ),
-                              obscureText: !isShow2,
-                              onHide: () {
-                                setState(() {
-                                  isShow2 = !isShow2;
-                                });
-                              },
-                              labelText: 'Confirm Password:',
-                              hintText: 'Confirm your Password:',
-                            ),
-                          ),
-                          Text(isPass ? " Đúng " : "Sai"),
-                        ],
-                      ),
-                    )
-                  ]),
-                ),
-
-                //BUTTON SIGN UP
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 40, 30, 30),
-                  child: Bunttoncomponent(
-                    height: 60.0,
-                    fontSize: 20,
-                    colorText: AppColor.secondColor,
-                    colorButton: AppColor.thirdColor,
-                    textButton: 'Sign Up',
-                    onTap: () {
-                      String email = emailController.text;
-                      String password = passwordController.text;
-                      String passwordConfirm = passwordConfirmController.text;
-
-                      signUpAccount(email, password, passwordConfirm);
-                    },
-                  ),
-                ),
-
-                //TEXT BACK TO SIGN IN
-                GestureDetector(
-                  onTap: onClickSignIn,
-                  child: const TextRichcomponent(
-                      colorOne: AppColor.thirdColor,
-                      colorTwo: AppColor.thirdColor,
-                      fontWeightOne: FontWeight.normal,
-                      fontWeightTwo: FontWeight.bold,
-                      textOne: 'I already have an account!',
-                      textTwo: ' Sign In'),
-                ),
-                const SizedBox(
-                  height: 30,
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 
   void signUpAccount(String email, String password, String passwordConfirm) {
@@ -179,9 +34,165 @@ class SignUpPageState extends State<SignUpPage> {
       Dialogs.showMyDialog(context, "Thông báo", "Dữ liệu đang bị trống");
     } else if (password != passwordConfirm) {
       Dialogs.showMyDialog(context, "Thông báo", "Mật khẩu không trùng khớp");
+    } else if (!Validation.checkEmail(email)) {
+      Dialogs.showMyDialog(context, "Thông báo", "Email không hợp lệ");
+    } else if (!Validation.checkPassword(password)) {
+      Dialogs.showMyDialog(context, "Thông báo", "Mật khẩu không hợp lệ");
     } else {
-      checkEmailPassword(email, password);
+      Api_Service.registerEmail(email, password, (smg, isSuccess) {
+        if (isSuccess) {
+          Navigator.of(context).pop();
+        } else {
+          Dialogs.showMyDialog(context, "Thông báo", smg);
+          Navigator.of(context).pop();
+        }
+      });
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      backgroundColor: AppColor.secondColor,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 470.0,
+              width: double.infinity,
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: const BoxDecoration(
+                        color: AppColor.thirdColor,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(35),
+                          bottomRight: Radius.circular(35),
+                        )),
+                  ),
+                  Positioned(
+                    top: 50,
+                    left: 30,
+                    right: 30,
+                    child: Column(
+                      children: [
+                        //TEXT SIGN UP
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 50),
+                          child: TextRichcomponent(
+                              fontSize: 34,
+                              textOne: 'Sign Up',
+                              fontWeightTwo: FontWeight.normal,
+                              textTwo: '\nPlease fill full the information'),
+                        ),
+
+                        //BUTTON SIGN UP
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(30, 40, 30, 30),
+                          child: Bunttoncomponent(
+                            height: 60.0,
+                            fontSize: 20,
+                            colorText: AppColor.secondColor,
+                            colorButton: AppColor.thirdColor,
+                            textButton: 'Sign Up',
+                            onTap: () {
+                              String email = emailController.text;
+                              String password = passwordController.text;
+                              String passwordConfirm =
+                                  passwordConfirmController.text;
+                            },
+                          ),
+                        ),
+                        //TEXTFIELD PASSWORD
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 30),
+                          child: Textfieldcomponent(
+                            controller: passwordController,
+                            height: 50.0,
+                            prefixIcon: const Icon(Icons.lock),
+                            suffxIcon: const Icon(
+                              Icons.remove_red_eye,
+                            ),
+                            obscureText: !isShow1,
+                            onHide: () {
+                              setState(() {
+                                isShow1 = !isShow1;
+                              });
+                            },
+                            labelText: 'Enter Password:',
+                            hintText: 'Sign up your Password:',
+                          ),
+                        ),
+                        //TEXTFIELD PASSWORD CONFIRM
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 0),
+                          child: Textfieldcomponent(
+                            onChanged: (value) {
+                              setState(() {
+                                isPass = Validation.checkPassword(value);
+                              });
+                            },
+                            controller: passwordConfirmController,
+                            height: 50.0,
+                            prefixIcon: const Icon(Icons.lock),
+                            obscureText: !isShow2,
+                            onHide: () {
+                              setState(() {
+                                isShow2 = !isShow2;
+                              });
+                            },
+                            labelText: 'Confirm Password:',
+                            hintText: 'Confirm your Password:',
+                          ),
+                        ),
+                        Text(isPass ? " Đúng " : "Sai"),
+                      ],
+                    ),
+                  ),
+                  //BUTTON SIGN UP
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(30, 40, 30, 30),
+                    child: Bunttoncomponent(
+                      height: 60.0,
+                      fontSize: 20,
+                      colorText: AppColor.secondColor,
+                      colorButton: AppColor.thirdColor,
+                      textButton: 'Sign Up',
+                      onTap: () {
+                        String email = emailController.text;
+                        String password = passwordController.text;
+                        String passwordConfirm = passwordConfirmController.text;
+                        Dialogs.showProgressDialog(context);
+                        Future.delayed(const Duration(seconds: 2), () {
+                          Navigator.of(context).pop(true);
+                          signUpAccount(email, password, passwordConfirm);
+                        });
+                      },
+                    ),
+                  ),
+
+                  //TEXT BACK TO SIGN IN
+                  GestureDetector(
+                    onTap: onClickSignIn,
+                    child: const TextRichcomponent(
+                        colorOne: AppColor.thirdColor,
+                        colorTwo: AppColor.thirdColor,
+                        fontWeightOne: FontWeight.normal,
+                        fontWeightTwo: FontWeight.bold,
+                        textOne: 'I already have an account!',
+                        textTwo: ' Sign In'),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   bool checkPassword(String pass) {

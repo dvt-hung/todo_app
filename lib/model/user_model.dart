@@ -47,4 +47,6 @@ class UserModel {
     map['address'] = address;
     return map;
   }
+
+  String? get getName => name;
 }
