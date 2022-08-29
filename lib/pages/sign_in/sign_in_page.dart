@@ -8,17 +8,16 @@ import 'package:noteapp/service/api_service.dart';
 import 'package:noteapp/utils/app_colors.dart';
 import 'package:noteapp/utils/app_styles.dart';
 import 'package:noteapp/utils/dialogs.dart';
-import 'package:noteapp/utils/singleton.dart';
 import 'package:noteapp/utils/validation.dart';
 
-class signInPage extends StatefulWidget {
-  const signInPage({Key? key}) : super(key: key);
+class SignInPage extends StatefulWidget {
+  const SignInPage({Key? key}) : super(key: key);
 
   @override
-  State<signInPage> createState() => _signInPage();
+  State<SignInPage> createState() => _SignInPage();
 }
 
-class _signInPage extends State<signInPage> {
+class _SignInPage extends State<SignInPage> {
   bool isValidation_Email = false;
   bool isValidation_Password = false;
   bool isShow = false;
@@ -137,6 +136,7 @@ class _signInPage extends State<signInPage> {
                       //BUTTON SIGNIN
                       Bunttoncomponent(
                         fontSize: 20,
+                        width: double.infinity,
                         colorText: AppColor.thirdColor,
                         colorButton: AppColor.secondColor,
                         textButton: 'Sign In',

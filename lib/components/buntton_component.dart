@@ -6,26 +6,28 @@ class Bunttoncomponent extends StatelessWidget {
   double? fontSize;
   Color? colorText;
   Color? colorButton;
+  double? width;
   double? height;
   double? radius;
   VoidCallback onTap;
 
   Bunttoncomponent(
       {Key? key,
-      this.textButton,
+      this.textButton = "",
       this.fontSize,
       this.colorText,
       this.colorButton,
+      this.width = double.infinity,
       required this.onTap,
-      this.height = 50,
+      this.height = 50.0,
       onHide})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: height!,
-      width: double.infinity,
+      height: height,
+      width: width,
       child: TextButton(
         child: Text(
           textButton!,

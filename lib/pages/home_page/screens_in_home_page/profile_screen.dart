@@ -3,7 +3,6 @@ import 'package:noteapp/components/buntton_component.dart';
 import 'package:noteapp/components/item_menu_component.dart';
 import 'package:noteapp/pages/sign_in/sign_in_page.dart';
 import 'package:noteapp/utils/app_colors.dart';
-import 'package:noteapp/utils/app_dimens.dart';
 import 'package:noteapp/utils/app_styles.dart';
 import 'package:noteapp/utils/dialogs.dart';
 import 'package:noteapp/utils/singleton.dart';
@@ -104,7 +103,7 @@ class _ProfilescreenState extends State<Profilescreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const signInPage(),
+          builder: (context) => const SignInPage(),
         ),
       );
     });
