@@ -1,13 +1,48 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:noteapp/model/note_model.dart';
 import 'package:noteapp/model/user_model.dart';
+import 'package:noteapp/utils/dialogs.dart';
 import 'package:noteapp/utils/singleton.dart';
 
 final FirebaseAuth auth = FirebaseAuth.instance;
 final db = FirebaseFirestore.instance;
 
 class Api_Service {
+// <---------------------- USER --------------------> //
+  // Get info User
+  static Future<List<QueryDocumentSnapshot<UserModel>>> getInfoUser(
+    String userId,
+    Function finish,
+    Function catchError,
+  ) async {
+    List<QueryDocumentSnapshot<UserModel>> user = await db
+        .collection("users")
+        .withConverter<UserModel>(
+          fromFirestore: (snapshot, _) => UserModel.fromJson(snapshot.data()!),
+          toFirestore: (appointment, _) => appointment.toJson(),
+        )
+        .where("userId", isEqualTo: userId)
+        .get()
+        .then((snapshot) => snapshot.docs)
+        .catchError((error) => catchError(error));
+
+    finish(user);
+    return user;
+  }
+
+  // Update info user
+  static void updateUser(UserModel user, Function callBack) {
+    final noteRef = db.collection("users").doc(user.uuid);
+    noteRef.update(
+      {"address": user.address, "name": user.name, "phone": user.phone},
+    ).then((value) => callBack("Success"), onError: (e) => callBack(e));
+  }
+
   // Register with Email
   static registerEmail(
       email, password, Function(String smg, bool isSuccess) callBack) async {
@@ -45,19 +80,6 @@ class Api_Service {
       },
     );
     callBack("Success !");
-  }
-
-  // Add new note
-  static void addNewNote(NoteModel noteModel) {
-    db.collection("note").add(noteModel.toJson()).then(
-          (data) => {
-            db.collection("note").doc(data.id).update(
-              {
-                "idNote": data.id,
-              },
-            )
-          },
-        );
   }
 
   // Sign in with Email vs Password
@@ -99,7 +121,25 @@ class Api_Service {
     }
   }
 
-// Get list note
+// <---------------------- NOTE --------------------> //
+// Update note
+  static void updateNote(NoteModel note, Function callBack) {
+    final noteRef = db.collection("note").doc(note.idNote);
+    noteRef.update({
+      "content": note.content,
+      "image": note.image,
+    }).then((value) => callBack("Success"), onError: (e) => callBack(e));
+  }
+
+  // Delete note
+  static void deleteNote(NoteModel note, Function callBack) {
+    db.collection("note").doc(note.idNote).delete().then(
+          (doc) => callBack("Success"),
+          onError: (e) => callBack(e),
+        );
+  }
+
+  // Get list note
   static Future<List<QueryDocumentSnapshot<NoteModel>>> getNote(
     String uuid,
     Function finish,
@@ -120,47 +160,49 @@ class Api_Service {
     return appointments;
   }
 
-// Update note
-  static void updateNote(NoteModel note, Function callBack) {
-    final noteRef = db.collection("note").doc(note.idNote);
-    noteRef.update({"content": note.content}).then(
-        (value) => callBack("Success"),
-        onError: (e) => callBack(e));
-  }
-
-  // Delete note
-  static void deleteNote(NoteModel note, Function callBack) {
-    db.collection("note").doc(note.idNote).delete().then(
-          (doc) => callBack("Success"),
-          onError: (e) => callBack(e),
-        );
-  }
-
-  // Update info user
-  static void updateUser(UserModel user, Function callBack) {
-    final noteRef = db.collection("users").doc(user.uuid);
-    noteRef.update(
-      {"address": user.address, "name": user.name, "phone": user.phone},
-    ).then((value) => callBack("Success"), onError: (e) => callBack(e));
-  }
-
-  static Future<List<QueryDocumentSnapshot<UserModel>>> getInfoUser(
-    String userId,
-    Function finish,
-    Function catchError,
-  ) async {
-    List<QueryDocumentSnapshot<UserModel>> user = await db
-        .collection("users")
-        .withConverter<UserModel>(
-          fromFirestore: (snapshot, _) => UserModel.fromJson(snapshot.data()!),
-          toFirestore: (appointment, _) => appointment.toJson(),
+  // Add new note
+  static Future<bool> addNewNote(NoteModel noteModel) async {
+    await db.collection("note").add(noteModel.toJson()).then(
+      (data) => {
+        db.collection("note").doc(data.id).update(
+          {
+            "idNote": data.id,
+          },
         )
-        .where("userId", isEqualTo: userId)
-        .get()
-        .then((snapshot) => snapshot.docs)
-        .catchError((error) => catchError(error));
+      },
+      onError: (e) {
+        return false;
+      },
+    );
+    return true;
+  }
 
-    finish(user);
-    return user;
+  // Upload image to storage
+  static Future uploadImageNote(BuildContext context, PlatformFile file,
+      NoteModel note, Function callBack) async {
+    // Show progress dialog
+    Dialogs.showProgressDialog(context);
+
+    // Path Storage
+    final pathStorage = "images/${file.name}";
+
+    // Image
+    final fileImage = File(file.path!);
+
+    // Reference Storage
+    final refImage = FirebaseStorage.instance.ref().child(pathStorage);
+    UploadTask? uploadTask = refImage.putFile(fileImage);
+    final snapshot = await uploadTask.whenComplete(() => () {});
+
+    // Get URL image
+    final urlImage = await snapshot.ref.getDownloadURL();
+    // add note to db
+    note.image = urlImage;
+
+    // Add new note to DB
+    callBack(await addNewNote(note));
+
+    // Close progress dialog
+    Navigator.of(context).pop();
   }
 }

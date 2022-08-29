@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,15 +8,27 @@ import 'package:noteapp/components/buntton_component.dart';
 import 'package:noteapp/components/text_rich_component.dart';
 import 'package:noteapp/utils/app_colors.dart';
 
-class AddNotescreen extends StatefulWidget {
-  const AddNotescreen({Key? key}) : super(key: key);
+class AddNoteScreen extends StatefulWidget {
+  const AddNoteScreen({Key? key}) : super(key: key);
 
   @override
-  State<AddNotescreen> createState() => _AddNotescreenState();
+  State<AddNoteScreen> createState() => AddNoteScreenState();
 }
 
-class _AddNotescreenState extends State<AddNotescreen> {
-  File? image;
+class AddNoteScreenState extends State<AddNoteScreen> {
+  PlatformFile? imageNote;
+
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
+
+    if (result == null) return;
+
+    setState(() {
+      imageNote = result.files.first;
+    });
+  }
+
+  late File imageFile;
 
   Future pickGallary() async {
     try {
@@ -23,7 +36,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
       if (image == null) return;
 
       final imageTemporary = File(image.path);
-      setState(() => this.image = imageTemporary);
+      // setState(() => this.image = imageTemporary);
     } on PlatformException catch (e) {
       print('$e Faild');
     }
@@ -35,7 +48,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
       if (image == null) return;
 
       final imageTemporary = File(image.path);
-      setState(() => this.image = imageTemporary);
+      // setState(() => this.image = imageTemporary);
     } on PlatformException catch (e) {
       print('$e Faild');
     }
@@ -147,14 +160,14 @@ class _AddNotescreenState extends State<AddNotescreen> {
                 height: 10,
               ),
 //INPUT IMAGE
-              image != null
-                  ? ClipOval(
-                      child: Image.file(image!,
-                          width: 140, height: 140, fit: BoxFit.cover),
-                    )
-                  : const FlutterLogo(
-                      size: 140,
-                    ),
+//               image != null
+//                   ? ClipOval(
+//                       child: Image.file(image!,
+//                           width: 140, height: 140, fit: BoxFit.cover),
+//                     )
+//                   : const FlutterLogo(
+//                       size: 140,
+//                     ),
 //TEXTFIELD TITLE
               Padding(
                 padding: const EdgeInsets.only(top: 20),

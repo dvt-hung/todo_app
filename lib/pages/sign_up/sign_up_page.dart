@@ -6,6 +6,7 @@ import 'package:noteapp/service/api_service.dart';
 import 'package:noteapp/utils/app_colors.dart';
 import 'package:noteapp/utils/dialogs.dart';
 import 'package:noteapp/utils/validation.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -130,7 +131,6 @@ class SignUpPageState extends State<SignUpPage> {
                             hintText: 'Confirm your Password:',
                           ),
                         ),
-                        Text(isPass ? " Đúng " : "Sai"),
                       ],
                     ),
                   ),
