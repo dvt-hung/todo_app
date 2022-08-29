@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
 
   final screens = [
     Homescreen(),
-    AddNotescreen(),
+    AddNoteScreen(),
     Profilescreen(),
   ];
   @override

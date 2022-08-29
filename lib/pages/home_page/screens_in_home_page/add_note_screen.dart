@@ -1,19 +1,32 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:noteapp/components/buntton_component.dart';
 import 'package:noteapp/components/text_rich_component.dart';
 import 'package:noteapp/utils/app_colors.dart';
 
-class AddNotescreen extends StatefulWidget {
-  const AddNotescreen({Key? key}) : super(key: key);
+class AddNoteScreen extends StatefulWidget {
+  const AddNoteScreen({Key? key}) : super(key: key);
 
   @override
-  State<AddNotescreen> createState() => _AddNotescreenState();
+  State<AddNoteScreen> createState() => AddNoteScreenState();
 }
 
-class _AddNotescreenState extends State<AddNotescreen> {
+class AddNoteScreenState extends State<AddNoteScreen> {
+  PlatformFile? imageNote;
+
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
+
+    if (result == null) return;
+
+    setState(() {
+      imageNote = result.files.first;
+    });
+  }
+
   late File imageFile;
 
   _openGallary(BuildContext context) async {
@@ -111,11 +124,12 @@ class _AddNotescreenState extends State<AddNotescreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         //_decideImageView(),
 
                         Padding(
-                          padding: EdgeInsets.only(top: 70),
+                          padding: const EdgeInsets.only(top: 70),
                           child: TextField(
                             controller: _addNotetitle,
                             decoration: const InputDecoration(
@@ -143,7 +157,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
                             colorText: AppColor.thirdColor,
                             colorButton: AppColor.secondColor,
                             onTap: () {
-                              _showChoiceDialog(context);
+                              selectFile();
                             }),
                         const SizedBox(
                           height: 20,
