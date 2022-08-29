@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:noteapp/utils/app_colors.dart';
-import 'package:noteapp/utils/app_styles.dart';
 
 class Textfieldcomponent extends StatelessWidget {
   String? labelText;
@@ -13,6 +12,7 @@ class Textfieldcomponent extends StatelessWidget {
   Color? color;
   TextEditingController controller;
   ValueChanged<String>? onChanged;
+  int? maxLine;
 
   Textfieldcomponent(
       {Key? key,
@@ -25,6 +25,7 @@ class Textfieldcomponent extends StatelessWidget {
       this.suffxIcon,
       this.height = 40.0,
       this.onHide,
+      this.maxLine = 1,
       this.color = AppColor.secondColor})
       : super(key: key);
 
@@ -33,11 +34,13 @@ class Textfieldcomponent extends StatelessWidget {
     return SizedBox(
       height: height,
       child: TextField(
+        maxLines: maxLine,
         controller: controller,
         obscureText: obscureText!,
         onChanged: onChanged,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(color: color!),
           ),
           prefixIcon: prefixIcon,
@@ -48,7 +51,6 @@ class Textfieldcomponent extends StatelessWidget {
                 )
               : const SizedBox.shrink(),
           border: OutlineInputBorder(
-            borderSide: BorderSide(color: color!),
             borderRadius: BorderRadius.circular(10),
           ),
           labelText: labelText,
