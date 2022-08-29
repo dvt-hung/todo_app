@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/utils/app_colors.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({Key? key}) : super(key: key);
@@ -14,32 +13,35 @@ class _HomescreenState extends State<Homescreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: buildListView(),
+      body: ListPage(),
     );
   }
+}
 
-  Widget buildListView() => GridView.builder(
-        gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          final item = items[index];
-          return GridTile(
-            child: Ink.image(
-              image: const AssetImage('asset/meme2.jpg'),
-              fit: BoxFit.cover,
-            ),
-            footer: Container(
-              padding: EdgeInsets.all(12),
-              child: Text(
-                item,
-                style: TextStyle(
-                    color: AppColor.redColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 32),
-              ),
-            ),
-          );
-        },
-      );
+class ListPage extends StatefulWidget {
+  const ListPage({Key? key}) : super(key: key);
+
+  @override
+  State<ListPage> createState() => _ListPageState();
+}
+
+class _ListPageState extends State<ListPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class DetailNote extends StatefulWidget {
+  const DetailNote({Key? key}) : super(key: key);
+
+  @override
+  State<DetailNote> createState() => _DetailNoteState();
+}
+
+class _DetailNoteState extends State<DetailNote> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
 }

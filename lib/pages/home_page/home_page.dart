@@ -33,16 +33,15 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: AppColor.thirdColor,
       appBar: AppBar(
-        centerTitle: true,
         toolbarHeight: 60,
         elevation: 0,
         backgroundColor: AppColor.secondColor,
         title: Text(
-          'Home',
+          'Note app',
           style: TextStyle(
-              color: AppColor.thirdColor,
-              fontSize: 25,
-              fontWeight: FontWeight.bold),
+              color: Colors.grey[200],
+              fontSize: 24,
+              fontWeight: FontWeight.w900),
         ),
       ),
       bottomNavigationBar: CurvedNavigationBar(

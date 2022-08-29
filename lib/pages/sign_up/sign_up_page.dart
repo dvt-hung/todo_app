@@ -3,7 +3,6 @@ import 'package:noteapp/components/buntton_component.dart';
 import 'package:noteapp/components/text_rich_component.dart';
 import 'package:noteapp/components/textfield_component.dart';
 import 'package:noteapp/service/api_service.dart';
-
 import 'package:noteapp/utils/app_colors.dart';
 import 'package:noteapp/utils/dialogs.dart';
 import 'package:noteapp/utils/validation.dart';
@@ -89,22 +88,7 @@ class SignUpPageState extends State<SignUpPage> {
                         ),
 
                         //BUTTON SIGN UP
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(30, 40, 30, 30),
-                          child: Bunttoncomponent(
-                            height: 60.0,
-                            fontSize: 20,
-                            colorText: AppColor.secondColor,
-                            colorButton: AppColor.thirdColor,
-                            textButton: 'Sign Up',
-                            onTap: () {
-                              String email = emailController.text;
-                              String password = passwordController.text;
-                              String passwordConfirm =
-                                  passwordConfirmController.text;
-                            },
-                          ),
-                        ),
+
                         //TEXTFIELD PASSWORD
                         Padding(
                           padding: const EdgeInsets.only(bottom: 30),
