@@ -123,20 +123,32 @@ class Api_Service {
 
 // <---------------------- NOTE --------------------> //
 // Update note
-  static void updateNote(NoteModel note, Function callBack) {
+  static Future updateNote(NoteModel note, Function callBack,
+      {PlatformFile? file}) async {
+    if (file != null) {
+      // Delete old file
+      await deleteImage(note.image!);
+      // Insert new file
+      note.image = await uploadImageNote(file);
+    }
     final noteRef = db.collection("note").doc(note.idNote);
     noteRef.update({
       "content": note.content,
       "image": note.image,
-    }).then((value) => callBack("Success"), onError: (e) => callBack(e));
+    }).then((value) {
+      callBack("Success");
+    }, onError: (e) => callBack(e));
   }
 
   // Delete note
-  static void deleteNote(NoteModel note, Function callBack) {
-    db.collection("note").doc(note.idNote).delete().then(
-          (doc) => callBack("Success"),
-          onError: (e) => callBack(e),
-        );
+  static Future deleteNote(NoteModel note, Function callBack) async {
+    await db.collection("note").doc(note.idNote).delete().then(
+      (doc) {
+        deleteImage(note.image!);
+        callBack("Success");
+      },
+      onError: (e) => callBack(e),
+    );
   }
 
   // Get list note
@@ -161,7 +173,15 @@ class Api_Service {
   }
 
   // Add new note
-  static Future<bool> addNewNote(NoteModel noteModel) async {
+  static Future<void> addNewNote(BuildContext context, NoteModel noteModel,
+      PlatformFile file, Function callBack) async {
+    Dialogs.showProgressDialog(context);
+
+    final urlImage = await uploadImageNote(file);
+
+    // add note to db
+    noteModel.image = urlImage;
+
     await db.collection("note").add(noteModel.toJson()).then(
       (data) => {
         db.collection("note").doc(data.id).update(
@@ -171,17 +191,17 @@ class Api_Service {
         )
       },
       onError: (e) {
-        return false;
+        callBack(false);
       },
     );
-    return true;
+    // Close progress dialog
+    Navigator.of(context).pop();
+    callBack(true);
   }
 
   // Upload image to storage
-  static Future uploadImageNote(BuildContext context, PlatformFile file,
-      NoteModel note, Function callBack) async {
+  static Future<String> uploadImageNote(PlatformFile file) async {
     // Show progress dialog
-    Dialogs.showProgressDialog(context);
 
     // Path Storage
     final pathStorage = "images/${file.name}";
@@ -192,17 +212,17 @@ class Api_Service {
     // Reference Storage
     final refImage = FirebaseStorage.instance.ref().child(pathStorage);
     UploadTask? uploadTask = refImage.putFile(fileImage);
+
     final snapshot = await uploadTask.whenComplete(() => () {});
 
     // Get URL image
     final urlImage = await snapshot.ref.getDownloadURL();
-    // add note to db
-    note.image = urlImage;
 
+    return urlImage;
     // Add new note to DB
-    callBack(await addNewNote(note));
+  }
 
-    // Close progress dialog
-    Navigator.of(context).pop();
+  static deleteImage(String url) {
+    FirebaseStorage.instance.refFromURL(url).delete();
   }
 }

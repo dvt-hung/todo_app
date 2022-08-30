@@ -100,12 +100,12 @@ class _ProfilescreenState extends State<Profilescreen> {
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.pop(context);
       Singleton().logOut();
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const SignInPage(),
-        ),
-      );
+      Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+        pageBuilder: (BuildContext context, Animation animation,
+            Animation secondaryAnimation) {
+          return const SignInPage();
+        },
+      ), (Route route) => false);
     });
   }
 }

@@ -63,15 +63,10 @@ class _TestPageState extends State<TestPage> {
               onPressed: () {
                 NoteModel note = NoteModel();
                 note.content = "Test add  2";
-                note.uuid = Singleton().user!.uuid;
+                // note.uuid = Singleton().user!.uuid;
                 note.create = Timestamp.now();
-                Api_Service.uploadImageNote(context, file!, note, (e) {
-                  if (e == true) {
-                    print("OKE");
-                  } else {
-                    print("No");
-                  }
-                });
+                file == null ? print("Null") : print(file!.path);
+                // Api_Service.updateNote(note, () {}, file: file);
               },
               child: const Text("Add note"),
             ),

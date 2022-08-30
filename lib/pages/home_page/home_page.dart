@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   int index = 0;
 
   final screens = [
-    Homescreen(),
+    HomeScreen(),
     AddNoteScreen(),
     Profilescreen(),
   ];
@@ -33,6 +33,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: AppColor.thirdColor,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: true,
         toolbarHeight: 60,
         elevation: 0,
         backgroundColor: AppColor.secondColor,
