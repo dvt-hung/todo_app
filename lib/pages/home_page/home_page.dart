@@ -18,9 +18,9 @@ class _HomePageState extends State<HomePage> {
   int index = 0;
 
   final screens = [
-    Homescreen(),
+    HomeScreen(),
     AddNoteScreen(),
-    Profilescreen(),
+    ProfileScreen(),
   ];
   @override
   Widget build(BuildContext context) {

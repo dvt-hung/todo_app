@@ -1,17 +1,72 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:noteapp/components/buntton_component.dart';
 import 'package:noteapp/components/text_rich_component.dart';
 import 'package:noteapp/components/textfield_component.dart';
 import 'package:noteapp/utils/app_colors.dart';
 
-class UpdatePage extends StatefulWidget {
-  const UpdatePage({Key? key}) : super(key: key);
+class UpdateNotePage extends StatefulWidget {
+  const UpdateNotePage({Key? key}) : super(key: key);
 
   @override
-  State<UpdatePage> createState() => _UpdatePageState();
+  State<UpdateNotePage> createState() => _UpdateNotePageState();
 }
 
-class _UpdatePageState extends State<UpdatePage> {
+class _UpdateNotePageState extends State<UpdateNotePage> {
+  File? image;
+
+  Future pickGallary() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+
+      final imageTemporary = File(image.path);
+      setState(() => this.image = imageTemporary);
+    } on PlatformException catch (e) {
+      print('$e Failed');
+    }
+  }
+
+  Future pickCamera() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.camera);
+      if (image == null) return;
+
+      final imageTemporary = File(image.path);
+      setState(() => this.image = imageTemporary);
+    } on PlatformException catch (e) {
+      print('$e Failed');
+    }
+  }
+
+  _showChoiceDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Choice'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  GestureDetector(
+                    child: const Text('Gallary'),
+                    onTap: () => pickGallary(),
+                  ),
+                  const Padding(padding: EdgeInsets.all(8)),
+                  GestureDetector(
+                    child: const Text('Camera'),
+                    onTap: () => pickCamera(),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   TextEditingController updateTitle = TextEditingController();
   TextEditingController updateContent = TextEditingController();
 
@@ -29,7 +84,7 @@ class _UpdatePageState extends State<UpdatePage> {
             child: Column(
               children: [
                 Container(
-                  height: heightOfPhone * 0.2,
+                  height: heightOfPhone * 0.3,
                   color: AppColor.secondColor,
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -38,21 +93,30 @@ class _UpdatePageState extends State<UpdatePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              height: 105.0,
-                              width: 105.0,
+                              height: 115.0,
+                              width: 115.0,
                               decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColor.thirdColor),
-                              child: const Padding(
-                                  padding: EdgeInsets.all(12),
-                                  child: FlutterLogo()),
+                              child: image != null
+                                  ? ClipOval(
+                                      child: Image.file(image!,
+                                          width: 140,
+                                          height: 140,
+                                          fit: BoxFit.cover),
+                                    )
+                                  : const FlutterLogo(),
                             ),
                           ],
                         ),
                         const SizedBox(
                           height: 10,
                         ),
-                        const Text('Edit picture'),
+                        GestureDetector(
+                            onTap: () {
+                              _showChoiceDialog(context);
+                            },
+                            child: const Text('Edit picture')),
                       ]),
                 ),
                 Container(
@@ -95,8 +159,11 @@ class _UpdatePageState extends State<UpdatePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    //BUTTON BACK
                     Bunttoncomponent(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).pop(true);
+                      },
                       width: 100,
                       textButton: 'Back',
                       colorText: AppColor.thirdColor,
@@ -105,6 +172,7 @@ class _UpdatePageState extends State<UpdatePage> {
                     const SizedBox(
                       width: 20,
                     ),
+                    //UPDATE
                     Bunttoncomponent(
                       onTap: () {},
                       width: 100,
