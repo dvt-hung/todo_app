@@ -20,7 +20,7 @@ class SignInPage extends StatefulWidget {
 class _SignInPage extends State<SignInPage> {
   bool isValidation_Email = false;
   bool isValidation_Password = false;
-  bool isShow = false;
+  bool isShow2 = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
 
@@ -76,96 +76,111 @@ class _SignInPage extends State<SignInPage> {
                       textTwo: ' \nLet\'s get stared now!'),
                 ),
               ),
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 70.0,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 70.0,
+                    ),
+                    //EMAIL TEXTFIELD
+                    Textfieldcomponent(
+                      controller: emailController,
+                      height: 50.0,
+                      prefixIcon: const Icon(Icons.email),
+                      suffxIcon: const Icon(Icons.person),
+                      obscureText: false,
+                      labelText: 'Email',
+                      hintText: "Enter your Email:",
+                      onChanged: (value) {
+                        setState(() {
+                          isValidation_Email =
+                              Validation.checkEmail(emailController.text);
+                        });
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 6.0,
+                        left: 10.0,
                       ),
-                      //EMAIL TEXTFIELD
-                      Textfieldcomponent(
-                        controller: emailController,
-                        height: 50.0,
-                        prefixIcon: const Icon(Icons.email),
-                        suffxIcon: const Icon(Icons.person),
-                        obscureText: false,
-                        labelText: 'Email',
-                        hintText: "Enter your Email:",
-                        onChanged: (value) {
-                          setState(() {
-                            isValidation_Email =
-                                Validation.checkEmail(emailController.text);
-                          });
-                        },
+                      child: Text(
+                          emailController
+                                  .text.isEmpty // if email empty => Text =  ""
+                              ? ""
+                              : isValidation_Email // if email have value =? Check
+                                  ? ''
+                                  : "Email không hợp lệ",
+                          style: AppStyles.style_error),
+                    ),
+                    const SizedBox(
+                      height: 30.0,
+                    ),
+                    //PASSWORD TEXTFIELD
+                    // Textfieldcomponent(
+                    //   controller: passController,
+                    //   height: 50.0,
+                    //   prefixIcon: const Icon(Icons.lock),
+                    //   suffxIcon: const Icon(
+                    //     Icons.remove_red_eye,
+                    //   ),
+                    //   hintText: "Password",
+                    //   labelText: "Password",
+                    // ),
+
+                    Textfieldcomponent(
+                      controller: passController,
+                      height: 50.0,
+                      prefixIcon: const Icon(Icons.lock),
+                      suffxIcon: const Icon(
+                        Icons.remove_red_eye,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 6.0,
-                          left: 10.0,
-                        ),
-                        child: Text(
-                            emailController.text
-                                    .isEmpty // if email empty => Text =  ""
-                                ? ""
-                                : isValidation_Email // if email have value =? Check
-                                    ? ''
-                                    : "Email không hợp lệ",
-                            style: AppStyles.style_error),
+                      obscureText: !isShow2,
+                      onHide: () {
+                        setState(() {
+                          isShow2 = !isShow2;
+                        });
+                      },
+                      labelText: 'Password:',
+                      hintText: 'Password:',
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    //BUTTON SIGNIN
+                    Bunttoncomponent(
+                      fontSize: 20,
+                      width: double.infinity,
+                      colorText: AppColor.thirdColor,
+                      colorButton: AppColor.secondColor,
+                      textButton: 'Sign In',
+                      onTap: () {
+                        Dialogs.showProgressDialog(context);
+                        Future.delayed(const Duration(seconds: 1), () {
+                          login();
+                        });
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Center(
+                      child: GestureDetector(
+                        onTap: onTapSignUp,
+                        child: const TextRichcomponent(
+                            colorOne: AppColor.primaryColor,
+                            fontWeightOne: FontWeight.normal,
+                            fontWeightTwo: FontWeight.bold,
+                            textOne: 'Don\'t have an account?',
+                            textTwo: ' Sign Up'),
                       ),
-                      const SizedBox(
-                        height: 30.0,
-                      ),
-                      //PASSWORD TEXTFIELD
-                      Textfieldcomponent(
-                        controller: passController,
-                        height: 50.0,
-                        prefixIcon: const Icon(Icons.lock),
-                        suffxIcon: const Icon(
-                          Icons.remove_red_eye,
-                        ),
-                        hintText: "Password",
-                        labelText: "Password",
-                      ),
-                      const SizedBox(
-                        height: 50,
-                      ),
-                      //BUTTON SIGNIN
-                      Bunttoncomponent(
-                        fontSize: 20,
-                        width: double.infinity,
-                        colorText: AppColor.thirdColor,
-                        colorButton: AppColor.secondColor,
-                        textButton: 'Sign In',
-                        onTap: () {
-                          Dialogs.showProgressDialog(context);
-                          Future.delayed(const Duration(seconds: 1), () {
-                            login();
-                          });
-                        },
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Center(
-                        child: GestureDetector(
-                          onTap: onTapSignUp,
-                          child: const TextRichcomponent(
-                              colorOne: AppColor.primaryColor,
-                              fontWeightOne: FontWeight.normal,
-                              fontWeightTwo: FontWeight.bold,
-                              textOne: 'Don\'t have an account?',
-                              textTwo: ' Sign Up'),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                  ],
                 ),
               ),
             ],

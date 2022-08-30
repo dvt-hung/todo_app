@@ -1,9 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:noteapp/pages/sign_in/sign_in_page.dart';
-import 'package:noteapp/pages/sign_up/sign_up_page.dart';
-import 'package:noteapp/utils/test_page.dart';
-import 'package:noteapp/pages/home_page/update/update_note_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const UpdatePage(),
+      home: const SignInPage(),
     );
   }
 }
