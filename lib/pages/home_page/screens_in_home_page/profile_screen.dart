@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:noteapp/components/buntton_component.dart';
+import 'package:noteapp/model/user_model.dart';
 import 'package:noteapp/pages/sign_in/sign_in_page.dart';
 import 'package:noteapp/pages/update_info/update_info_page.dart';
 import 'package:noteapp/utils/app_colors.dart';
+import 'package:noteapp/utils/app_dimens.dart';
+import 'package:noteapp/utils/app_styles.dart';
 import 'package:noteapp/utils/dialogs.dart';
 import 'package:noteapp/utils/singleton.dart';
 
@@ -14,6 +17,16 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  UserModel user = UserModel();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (Singleton().user != null) {
+      user = Singleton().user!;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -21,13 +34,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: AppColor.secondColor,
         body: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 20),
-              child: CircleAvatar(
-                  minRadius: 60,
-                  child: FlutterLogo(
-                    size: 90,
-                  )),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: ClipOval(
+                  child: user.image!.isNotEmpty
+                      ? Image.network(
+                          user.image!,
+                          height: 100,
+                          width: 100,
+                        )
+                      : const FlutterLogo(
+                          size: 90,
+                        )),
             ),
             Expanded(
               child: Container(
@@ -43,11 +61,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 40, child: Text('Name:')),
-                          const SizedBox(height: 40, child: Text('Email:')),
-                          const SizedBox(height: 40, child: Text('Address:')),
-                          const SizedBox(
-                              height: 30, child: Text('Phone number:')),
+                          SizedBox(
+                            height: 40,
+                            child: Text(
+                              'Name: ${(user.name != null && user.name!.isNotEmpty) ? user.name : "Chưa cập nhật"}',
+                              style: const TextStyle(
+                                  fontSize: AppDimens.text_size_16),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 40,
+                            child: Text(
+                              'Email: ${(user.email != null && user.email!.isNotEmpty) ? user.email : "Chưa cập nhật"}',
+                              style: const TextStyle(
+                                  fontSize: AppDimens.text_size_16),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 40,
+                            child: Text(
+                              'Address: ${(user.address != null && user.address!.isNotEmpty) ? user.address : "Chưa cập nhật"}',
+                              style: const TextStyle(
+                                  fontSize: AppDimens.text_size_16),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30,
+                            child: Text(
+                              'Phone: ${(user.phone != null && user.phone!.isNotEmpty) ? user.phone : "Chưa cập nhật"}',
+                              style: const TextStyle(
+                                  fontSize: AppDimens.text_size_16),
+                            ),
+                          ),
                           const SizedBox(
                             height: 60,
                           ),
@@ -76,6 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void signOutAccount() {
+    Singleton().logout();
     // Show dialog progress
     Dialogs.showProgressDialog(context);
 

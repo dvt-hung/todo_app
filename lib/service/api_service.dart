@@ -7,10 +7,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:noteapp/model/note_model.dart';
 import 'package:noteapp/model/user_model.dart';
 import 'package:noteapp/utils/dialogs.dart';
+import 'package:noteapp/utils/preferences.dart';
 import 'package:noteapp/utils/singleton.dart';
 
 final FirebaseAuth auth = FirebaseAuth.instance;
 final db = FirebaseFirestore.instance;
+final Preferences prefs = Preferences();
 
 class Api_Service {
 // <---------------------- USER --------------------> //
@@ -36,11 +38,33 @@ class Api_Service {
   }
 
   // Update info user
-  static void updateUser(UserModel user, Function callBack) {
+  static Future updateUser(
+      UserModel user, PlatformFile? imageUser, Function callBack) async {
     final noteRef = db.collection("users").doc(user.uuid);
-    noteRef.update(
-      {"address": user.address, "name": user.name, "phone": user.phone},
-    ).then((value) => callBack("Success"), onError: (e) => callBack(e));
+
+    if (imageUser != null) {
+      if (user.image!.isNotEmpty) {
+        await deleteImage(user.image!);
+        user.image = await uploadImage(imageUser);
+      } else {
+        user.image = await uploadImage(imageUser);
+      }
+    }
+
+    await noteRef.update(
+      {
+        "address": user.address,
+        "name": user.name,
+        "phone": user.phone,
+        "image": user.image
+      },
+    ).then((value) async {
+      callBack(true);
+      Singleton().prefs?.setUserPreference(user);
+      Singleton().signInCompleted(user);
+      Singleton().user =
+          await Singleton().prefs!.getUserPreference() as UserModel;
+    }, onError: (e) => callBack(false));
   }
 
   // Register with Email
@@ -89,17 +113,22 @@ class Api_Service {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
+      List<UserModel> users = [];
       User? user = FirebaseAuth.instance.currentUser;
       // If login success
       if (check()) {
-        getInfoUser(user!.uid, (data) {
+        getInfoUser(user!.uid, (data) async {
           List<dynamic> listUser = data;
-          listUser.forEach((element) {
-            List<UserModel> users = [];
+          for (var element in listUser) {
             users.add(element.data());
-            Singleton().user = users[0];
+          }
+          if (users.isNotEmpty && users[0].uuid != null) {
+            Singleton().prefs!.setUserPreference(users[0]);
+            Singleton().signInCompleted(users[0]);
+            Singleton().user =
+                await Singleton().prefs!.getUserPreference() as UserModel;
             callBack(true, "Đăng nhập thành công");
-          });
+          }
         }, () {});
       }
     } on FirebaseAuthException catch (e) {
@@ -123,21 +152,28 @@ class Api_Service {
 
 // <---------------------- NOTE --------------------> //
 // Update note
-  static Future updateNote(NoteModel note, Function callBack,
-      {PlatformFile? file}) async {
+  static Future updateNote(
+    NoteModel note,
+    PlatformFile? file,
+    Function callBack,
+  ) async {
+    print(note.title!);
+    print(note.content!);
     if (file != null) {
       // Delete old file
       await deleteImage(note.image!);
       // Insert new file
-      note.image = await uploadImageNote(file);
+      note.image = await uploadImage(file);
     }
+    print(note.image!);
     final noteRef = db.collection("note").doc(note.idNote);
     noteRef.update({
+      "title": note.title,
       "content": note.content,
       "image": note.image,
     }).then((value) {
-      callBack("Success");
-    }, onError: (e) => callBack(e));
+      callBack(true);
+    }, onError: (e) => callBack(false));
   }
 
   // Delete note
@@ -177,7 +213,7 @@ class Api_Service {
       PlatformFile file, Function callBack) async {
     Dialogs.showProgressDialog(context);
 
-    final urlImage = await uploadImageNote(file);
+    final urlImage = await uploadImage(file);
 
     // add note to db
     noteModel.image = urlImage;
@@ -200,7 +236,7 @@ class Api_Service {
   }
 
   // Upload image to storage
-  static Future<String> uploadImageNote(PlatformFile file) async {
+  static Future<String> uploadImage(PlatformFile file) async {
     // Show progress dialog
 
     // Path Storage

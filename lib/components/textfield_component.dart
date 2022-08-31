@@ -13,6 +13,7 @@ class Textfieldcomponent extends StatelessWidget {
   TextEditingController controller;
   ValueChanged<String>? onChanged;
   int? maxLine;
+  bool? enable;
 
   Textfieldcomponent(
       {Key? key,
@@ -26,6 +27,7 @@ class Textfieldcomponent extends StatelessWidget {
       this.height = 40.0,
       this.onHide,
       this.maxLine = 1,
+      this.enable = true,
       this.color = AppColor.secondColor})
       : super(key: key);
 
@@ -34,6 +36,7 @@ class Textfieldcomponent extends StatelessWidget {
     return SizedBox(
       height: height,
       child: TextField(
+        enabled: enable,
         maxLines: maxLine,
         controller: controller,
         obscureText: obscureText!,

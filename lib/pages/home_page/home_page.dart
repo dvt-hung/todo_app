@@ -6,6 +6,7 @@ import 'package:noteapp/pages/home_page/screens_in_home_page/add_note_screen.dar
 import 'package:noteapp/pages/home_page/screens_in_home_page/home_screen.dart';
 import 'package:noteapp/pages/home_page/screens_in_home_page/profile_screen.dart';
 import 'package:noteapp/utils/app_colors.dart';
+import 'package:noteapp/utils/singleton.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -22,6 +23,16 @@ class _HomePageState extends State<HomePage> {
     AddNoteScreen(),
     ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (Singleton().user != null) {
+      print(Singleton().user!.uuid);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final items = <Widget>[

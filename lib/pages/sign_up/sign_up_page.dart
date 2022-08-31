@@ -70,7 +70,7 @@ class SignUpPageState extends State<SignUpPage> {
       children: [
         Container(
           width: double.infinity,
-          height: MediaQuery.of(context).size.height * 0.6,
+          height: MediaQuery.of(context).size.height * 0.65,
           decoration: const BoxDecoration(
             color: AppColor.thirdColor,
             borderRadius: BorderRadius.only(
@@ -97,7 +97,7 @@ class SignUpPageState extends State<SignUpPage> {
                     prefixIcon: const Icon(Icons.email),
                     suffxIcon: null,
                     obscureText: false,
-                    labelText: "Enter your Email:",
+                    labelText: "Enter your Email",
                   ),
                 ),
 
@@ -117,7 +117,7 @@ class SignUpPageState extends State<SignUpPage> {
                         isShow1 = !isShow1;
                       });
                     },
-                    labelText: 'Enter Password:',
+                    labelText: 'Enter Password',
                     hintText: 'Sign up your Password:',
                   ),
                 ),
@@ -135,8 +135,8 @@ class SignUpPageState extends State<SignUpPage> {
                       isShow2 = !isShow2;
                     });
                   },
-                  labelText: 'Confirm Password:',
-                  hintText: 'Confirm your Password:',
+                  labelText: 'Confirm Password',
+                  hintText: 'Confirm your Password',
                 ),
               ],
             ),
@@ -183,27 +183,5 @@ class SignUpPageState extends State<SignUpPage> {
     bool passwordValid =
         RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$').hasMatch(pass);
     return passwordValid;
-  }
-
-  void checkEmailPassword(String email, String pass) {
-    String msg_EmailValid = "Email không hợp lệ";
-
-    // Regex Email
-    bool emailValid = RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(email);
-
-    if (!emailValid) {
-      Dialogs.showMyDialog(context, "Thông báo", msg_EmailValid);
-    } else if (emailValid) {
-      Api_Service.registerEmail(email, pass, (msg, isSuccess) {
-        if (isSuccess) {
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(Dialogs.mySnackBar(msg));
-        } else {
-          Dialogs.showMyDialog(context, "Thông báo", msg);
-        }
-      });
-    }
   }
 }

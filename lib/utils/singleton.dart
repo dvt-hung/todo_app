@@ -1,8 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:noteapp/model/user_model.dart';
-import 'package:noteapp/utils/dialogs.dart';
 import 'package:noteapp/utils/preferences.dart';
 
 class Singleton {
@@ -13,14 +9,28 @@ class Singleton {
   factory Singleton() {
     return _singleton;
   }
-  logOut() async {
-    await FirebaseAuth.instance.signOut();
-    user = null;
-  }
-
   Singleton._internal();
 
   initial() async {
     prefs = Preferences();
+  }
+
+  Future<bool> isLogin() async {
+    user = await prefs?.getUserPreference();
+    bool isLogin = false;
+    isLogin = await prefs!.getIsLogin() as bool;
+
+    return isLogin;
+  }
+
+  logout() async {
+    user = null;
+    prefs!.setIsRLogin(false);
+    prefs!.clear();
+  }
+
+  signInCompleted(UserModel user) async {
+    prefs!.setIsRLogin(true);
+    prefs!.setUserPreference(user);
   }
 }
