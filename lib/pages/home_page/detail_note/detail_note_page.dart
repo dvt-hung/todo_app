@@ -85,22 +85,20 @@ class _DetailNotePageState extends State<DetailNotePage> {
                     const SizedBox(
                       height: 10.0,
                     ),
-                    Expanded(
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: AppColor.thirdColor,
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: AppColor.greyColor,
-                                blurRadius: 7,
-                              ),
-                            ]),
-                        child: const Padding(
-                          padding: EdgeInsets.all(10),
-                          child: SingleChildScrollView(child: Text('abc')),
-                        ),
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: AppColor.thirdColor,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: AppColor.greyColor,
+                              blurRadius: 7,
+                            ),
+                          ]),
+                      child: const Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text("aa"),
                       ),
                     )
                   ],
@@ -115,8 +113,8 @@ class _DetailNotePageState extends State<DetailNotePage> {
 
   onClickedIconUp() {
     setState(() {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const UpdateNotePage()));
+      // Navigator.push(context,
+      //     MaterialPageRoute(builder: (context) => const UpdateNotePage()));
     });
   }
 

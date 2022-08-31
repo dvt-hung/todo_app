@@ -8,6 +8,7 @@ import 'package:noteapp/service/api_service.dart';
 import 'package:noteapp/utils/app_colors.dart';
 import 'package:noteapp/utils/app_styles.dart';
 import 'package:noteapp/utils/dialogs.dart';
+import 'package:noteapp/utils/singleton.dart';
 import 'package:noteapp/utils/validation.dart';
 
 class SignInPage extends StatefulWidget {
@@ -118,17 +119,6 @@ class _SignInPage extends State<SignInPage> {
                     const SizedBox(
                       height: 30.0,
                     ),
-                    //PASSWORD TEXTFIELD
-                    // Textfieldcomponent(
-                    //   controller: passController,
-                    //   height: 50.0,
-                    //   prefixIcon: const Icon(Icons.lock),
-                    //   suffxIcon: const Icon(
-                    //     Icons.remove_red_eye,
-                    //   ),
-                    //   hintText: "Password",
-                    //   labelText: "Password",
-                    // ),
 
                     Textfieldcomponent(
                       controller: passController,

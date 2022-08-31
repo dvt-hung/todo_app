@@ -20,7 +20,6 @@ class Preferences {
   Future<bool> getBool(String key) async {
     final SharedPreferences prefs = await _prefs;
     final isRemember = prefs.getBool(key) ?? false;
-    print(isRemember.runtimeType);
     return isRemember;
     // return prefs.getBool(key) ?? false;
   }
@@ -54,5 +53,15 @@ class Preferences {
     } else {
       return null;
     }
+  }
+
+  Future setIsRLogin(bool isLogin) async {
+    final SharedPreferences prefs = await _prefs;
+    prefs.setBool("isLogin", isLogin);
+  }
+
+  Future<bool?> getIsLogin() async {
+    final SharedPreferences prefs = await _prefs;
+    return prefs.getBool("isLogin");
   }
 }
