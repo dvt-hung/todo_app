@@ -1,90 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:noteapp/components/buntton_component.dart';
-import 'package:noteapp/components/item_menu_component.dart';
 import 'package:noteapp/pages/sign_in/sign_in_page.dart';
+import 'package:noteapp/pages/update_info/update_info_page.dart';
 import 'package:noteapp/utils/app_colors.dart';
-import 'package:noteapp/utils/app_styles.dart';
 import 'package:noteapp/utils/dialogs.dart';
 import 'package:noteapp/utils/singleton.dart';
 
-class MenuModel {
-  int idMenu;
-  String title;
-
-  MenuModel({required this.idMenu, required this.title});
-}
-
-class Profilescreen extends StatefulWidget {
-  const Profilescreen({Key? key}) : super(key: key);
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
-  State<Profilescreen> createState() => _ProfilescreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfilescreenState extends State<Profilescreen> {
-  List<MenuModel> listMenus = [
-    MenuModel(idMenu: 0, title: "Thông tin cá nhân"),
-    MenuModel(idMenu: 1, title: "Cài đặt"),
-  ];
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColor.secondColor,
+        body: Column(
           children: [
-            const SizedBox(
-              height: 10,
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: CircleAvatar(
+                  minRadius: 60,
+                  child: FlutterLogo(
+                    size: 90,
+                  )),
             ),
-            const CircleAvatar(
-              backgroundColor: AppColor.thirdColor,
-              minRadius: 50.0,
-              child: FlutterLogo(
-                size: 60,
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              Singleton().user!.name!,
-              style: AppStyles.h1,
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            ListView.builder(
-              itemCount: listMenus.length,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return ItemMenuComponent(
-                  items: listMenus[index],
-                  onTap: () {
-                    switch (index) {
-                      case 0:
-                        break;
-                      case 1:
-                        break;
-                    }
-                  },
-                );
-              },
-            ),
-            const SizedBox(
-              height: 100,
-            ),
-            SizedBox(
-              width: 100,
-              height: 40,
-              child: Bunttoncomponent(
-                textButton: "Đăng xuất",
-                colorButton: AppColor.redColor,
-                colorText: AppColor.thirdColor,
-                onTap: () {
-                  signOutAccount();
-                },
-              ),
+            Expanded(
+              child: Container(
+                  decoration: const BoxDecoration(
+                    color: AppColor.thirdColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 40, child: Text('Name:')),
+                          const SizedBox(height: 40, child: Text('Email:')),
+                          const SizedBox(height: 40, child: Text('Address:')),
+                          const SizedBox(
+                              height: 30, child: Text('Phone number:')),
+                          const SizedBox(
+                            height: 60,
+                          ),
+                          Bunttoncomponent(
+                            colorText: AppColor.thirdColor,
+                            colorButton: AppColor.secondColor,
+                            onTap: changeInfo,
+                            textButton: 'Change Info',
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Bunttoncomponent(
+                            colorText: AppColor.thirdColor,
+                            colorButton: AppColor.redColor,
+                            onTap: signOutAccount,
+                            textButton: 'Sign Out',
+                          ),
+                        ]),
+                  )),
             ),
           ],
         ),
@@ -97,15 +80,17 @@ class _ProfilescreenState extends State<Profilescreen> {
     Dialogs.showProgressDialog(context);
 
     // Sign out
-    Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pop(context);
-      Singleton().logOut();
-      Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
-        pageBuilder: (BuildContext context, Animation animation,
-            Animation secondaryAnimation) {
-          return const SignInPage();
-        },
-      ), (Route route) => false);
-    });
+
+    Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+      pageBuilder: (BuildContext context, Animation animation,
+          Animation secondaryAnimation) {
+        return const SignInPage();
+      },
+    ), (Route route) => false);
+  }
+
+  void changeInfo() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const UpdateInfoPage()));
   }
 }

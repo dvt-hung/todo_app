@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:noteapp/pages/home_page/home_page.dart';
 import 'package:noteapp/pages/home_page/screens_in_home_page/add_note_screen.dart';
 import 'package:noteapp/pages/sign_in/sign_in_page.dart';
-import 'package:noteapp/pages/sign_up/sign_up_page.dart';
-import 'package:noteapp/utils/test_page.dart';
-import 'package:noteapp/pages/home_page/update/update_note_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
