@@ -72,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           SizedBox(
                             height: 40,
                             child: Text(
-                              'Email: ${(user.email != null && user.email!.isNotEmpty) ? user.email : "Chưa cập nhật"}',
+                              'Email: ${(user.email != null && user.email!.isNotEmpty) ? user.email : "Chưaa cập nhật"}',
                               style: const TextStyle(
                                   fontSize: AppDimens.text_size_16),
                             ),
