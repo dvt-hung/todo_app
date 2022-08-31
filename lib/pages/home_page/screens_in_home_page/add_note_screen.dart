@@ -1,72 +1,77 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:noteapp/components/buntton_component.dart';
 import 'package:noteapp/components/text_rich_component.dart';
+import 'package:noteapp/model/note_model.dart';
+import 'package:noteapp/service/api_service.dart';
 import 'package:noteapp/utils/app_colors.dart';
+import 'package:noteapp/utils/dialogs.dart';
+import 'package:noteapp/utils/singleton.dart';
 
 class AddNoteScreen extends StatefulWidget {
   const AddNoteScreen({Key? key}) : super(key: key);
 
   @override
-  State<AddNoteScreen> createState() => _AddNoteScreenState();
+  State<AddNoteScreen> createState() => AddNoteScreenState();
 }
 
-class _AddNoteScreenState extends State<AddNoteScreen> {
-  File? image;
+class AddNoteScreenState extends State<AddNoteScreen> {
+  PlatformFile? imageNote;
 
-  Future pickGallary() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) return;
+  // Select image
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
 
-      final imageTemporary = File(image.path);
-      setState(() => this.image = imageTemporary);
-    } on PlatformException catch (e) {
-      print('$e Faild');
+    if (result == null) return;
+
+    setState(() {
+      imageNote = result.files.first;
+    });
+  }
+
+  // Add note
+  void addNewNote() {
+    String title = _addTitle.text;
+    String content = _addContent.text;
+
+    if (title.isEmpty || content.isEmpty || imageNote == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        Dialogs.mySnackBar("Dữ liệu đang bị bỏ trống"),
+      );
+    } else {
+      NoteModel note = NoteModel();
+      note.title = title;
+      note.content = content;
+      note.uuid = Singleton().user!.uuid;
+      note.create = Timestamp.now();
+      // Call API
+      Api_Service.addNewNote(
+        context,
+        note,
+        imageNote!,
+        (result) {
+          if (result) {
+            _addTitle.clear();
+            _addContent.clear();
+            imageNote = null;
+            ScaffoldMessenger.of(context).showSnackBar(
+              Dialogs.mySnackBar("Đã thêm thành công"),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              Dialogs.mySnackBar("Không thành công"),
+            );
+          }
+        },
+      );
     }
   }
 
-  Future pickCamera() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.camera);
-      if (image == null) return;
-
-      final imageTemporary = File(image.path);
-      setState(() => this.image = imageTemporary);
-    } on PlatformException catch (e) {
-      print('$e Faild');
-    }
-  }
-
-  _showChoiceDialog(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Choice'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  GestureDetector(
-                    child: const Text('Gallary'),
-                    onTap: () => pickGallary(),
-                  ),
-                  const Padding(padding: EdgeInsets.all(8)),
-                  GestureDetector(
-                    child: const Text('Camera'),
-                    onTap: () => pickCamera(),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  final TextEditingController _addNotetitle = TextEditingController();
+  final TextEditingController _addTitle = TextEditingController();
   final TextEditingController _addContent = TextEditingController();
 
   @override
@@ -102,22 +107,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                 textOne: 'Add a note',
                 textTwo: '\nWrite something',
                 fontSize: 22),
-            // GestureDetector(
-            //   onTap: () => pickGallary(),
-            //   child: Container(
-            //     height: 45.0,
-            //     width: 45.0,
-            //     decoration: BoxDecoration(
-            //       color: AppColor.redColor,
-            //       borderRadius: BorderRadius.circular(8),
-            //     ),
-            //     child: const Icon(
-            //       Icons.note,
-            //       color: AppColor.thirdColor,
-            //       size: 35,
-            //     ),
-            //   ),
-            // )
+            //
           ],
         ),
       ),
@@ -147,19 +137,21 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                 height: 10,
               ),
 //INPUT IMAGE
-              image != null
+              imageNote != null
                   ? ClipOval(
-                      child: Image.file(image!,
-                          width: 140, height: 140, fit: BoxFit.cover),
+                      child: Image.file(File(imageNote!.path!),
+                          width: 90, height: 90, fit: BoxFit.cover),
                     )
-                  : const FlutterLogo(
-                      size: 140,
+                  : Image.asset(
+                      "asset/photo.png",
+                      height: 90,
+                      width: 90,
                     ),
 //TEXTFIELD TITLE
               Padding(
-                padding: const EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.only(top: 10),
                 child: TextField(
-                  controller: _addNotetitle,
+                  controller: _addTitle,
                   decoration: const InputDecoration(
                     labelText: 'Title',
                     border: OutlineInputBorder(),
@@ -191,7 +183,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                   colorText: AppColor.thirdColor,
                   colorButton: AppColor.secondColor,
                   onTap: () {
-                    _showChoiceDialog(context);
+                    selectFile();
                   }),
               const SizedBox(
                 height: 20,
@@ -202,7 +194,9 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                   fontSize: 22,
                   colorText: AppColor.thirdColor,
                   colorButton: AppColor.blueColor,
-                  onTap: () {}),
+                  onTap: () {
+                    addNewNote();
+                  }),
             ],
           ),
         ),

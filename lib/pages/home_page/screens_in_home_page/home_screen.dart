@@ -1,4 +1,12 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:noteapp/model/note_model.dart';
+import 'package:noteapp/pages/home_page/detail_note/detail_note_page.dart';
+import 'package:noteapp/service/api_service.dart';
+import 'package:noteapp/utils/app_colors.dart';
+import 'package:noteapp/utils/app_styles.dart';
+import 'package:noteapp/utils/dialogs.dart';
+import 'package:noteapp/utils/singleton.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -8,40 +16,128 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<String> items = [];
+  List<NoteModel> listNote = [];
+  // Get list note
+  Future getList() async {
+    await Api_Service.getNote(
+      Singleton().user!.uuid!,
+      (notes) {
+        listNote.clear();
+        List<dynamic> listTemp = notes;
+        for (var element in listTemp) {
+          listNote.add(NoteModel.fromJson(element));
+        }
+
+// Delete the file
+      },
+      // Catch Error
+      (e) {
+        ScaffoldMessenger.of(context).showSnackBar(Dialogs.mySnackBar(e));
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: ListPage(),
+    Size size = MediaQuery.of(context).size;
+
+    return Scaffold(
+      body: FutureBuilder(
+        future: getList(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return ListView.builder(
+              itemCount: listNote.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Item_Note(
+                  listNote: listNote,
+                  size: size,
+                  index: index,
+                );
+              },
+            );
+          }
+        },
+      ),
     );
   }
 }
 
-class ListPage extends StatefulWidget {
-  const ListPage({Key? key}) : super(key: key);
+class Item_Note extends StatelessWidget {
+  const Item_Note({
+    Key? key,
+    required this.listNote,
+    required this.size,
+    required this.index,
+  }) : super(key: key);
 
-  @override
-  State<ListPage> createState() => _ListPageState();
-}
+  final List<NoteModel> listNote;
+  final Size size;
+  final int index;
 
-class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
-    return Container();
-  }
-}
-
-class DetailNote extends StatefulWidget {
-  const DetailNote({Key? key}) : super(key: key);
-
-  @override
-  State<DetailNote> createState() => _DetailNoteState();
-}
-
-class _DetailNoteState extends State<DetailNote> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
+    return Dismissible(
+        key: Key(listNote[index].uuid!),
+        background: Container(
+          margin: const EdgeInsets.only(right: 30),
+          alignment: AlignmentDirectional.centerEnd,
+          child: const Icon(
+            Icons.delete,
+            color: AppColor.redColor,
+            size: 30,
+          ),
+        ),
+        direction: DismissDirection.endToStart,
+        onDismissed: (direction) async {
+          Dialogs.showProgressDialog(context);
+          await Api_Service.deleteNote(listNote[index], (msg) {});
+          Navigator.of(context).pop();
+        },
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => DetailNotePage(
+                          note: listNote[index],
+                        )));
+          },
+          child: Container(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Left
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      listNote[index].title!,
+                      style: AppStyles.h1,
+                    ),
+                    SizedBox(
+                      width: size.width - 120,
+                      child: Text(
+                        listNote[index].content!,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+                Image.network(
+                  listNote[index].image!,
+                  height: 80,
+                  width: 80,
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }

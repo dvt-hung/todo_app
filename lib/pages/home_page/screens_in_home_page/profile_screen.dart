@@ -80,6 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Dialogs.showProgressDialog(context);
 
     // Sign out
+
     Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
       pageBuilder: (BuildContext context, Animation animation,
           Animation secondaryAnimation) {

@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:noteapp/pages/home_page/home_page.dart';
+import 'package:noteapp/pages/home_page/screens_in_home_page/add_note_screen.dart';
 import 'package:noteapp/pages/sign_in/sign_in_page.dart';
 
 Future<void> main() async {

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:noteapp/components/text_rich_component.dart';
+import 'package:noteapp/model/note_model.dart';
 import 'package:noteapp/pages/home_page/update_note/update_note_page.dart';
 import 'package:noteapp/utils/app_colors.dart';
 
 class DetailNotePage extends StatefulWidget {
-  const DetailNotePage({Key? key}) : super(key: key);
+  const DetailNotePage({Key? key, required this.note}) : super(key: key);
+
+  final NoteModel note;
 
   @override
   State<DetailNotePage> createState() => _DetailNotePageState();
@@ -13,10 +16,7 @@ class DetailNotePage extends StatefulWidget {
 class _DetailNotePageState extends State<DetailNotePage> {
   @override
   Widget build(BuildContext context) {
-    String abc =
-        'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
     double heightOfPhone = MediaQuery.of(context).size.height;
-
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -73,11 +73,12 @@ class _DetailNotePageState extends State<DetailNotePage> {
                     const SizedBox(
                       height: 10,
                     ),
-                    const SizedBox(
+                    SizedBox(
                       width: double.infinity,
                       child: TextRichcomponent(
-                        textOne: 'Title: abcs',
-                        textTwo: '\nDate-create: ',
+                        textOne: 'Title: ${widget.note.title}',
+                        textTwo:
+                            '\nDate: ${widget.note.create?.toDate().toString()}',
                         fontSize: 18,
                       ),
                     ),
@@ -98,9 +99,7 @@ class _DetailNotePageState extends State<DetailNotePage> {
                             ]),
                         child: const Padding(
                           padding: EdgeInsets.all(10),
-                          child: SingleChildScrollView(
-                              child: Text(
-                                  'abc')),
+                          child: SingleChildScrollView(child: Text('abc')),
                         ),
                       ),
                     )

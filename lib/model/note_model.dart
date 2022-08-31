@@ -21,6 +21,7 @@ class NoteModel {
     title = json['title'] ?? '';
     content = json['content'] ?? '';
     image = json['image'] ?? '';
+    create = json['create'] ?? '';
   }
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
