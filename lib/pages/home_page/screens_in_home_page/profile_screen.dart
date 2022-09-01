@@ -5,7 +5,6 @@ import 'package:noteapp/pages/sign_in/sign_in_page.dart';
 import 'package:noteapp/pages/update_info/update_info_page.dart';
 import 'package:noteapp/utils/app_colors.dart';
 import 'package:noteapp/utils/app_dimens.dart';
-import 'package:noteapp/utils/app_styles.dart';
 import 'package:noteapp/utils/dialogs.dart';
 import 'package:noteapp/utils/singleton.dart';
 
@@ -36,16 +35,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
-              child: ClipOval(
-                  child: user.image!.isNotEmpty
-                      ? Image.network(
-                          user.image!,
-                          height: 100,
-                          width: 100,
-                        )
-                      : const FlutterLogo(
-                          size: 90,
-                        )),
+              child: Column(
+                children: [
+                  ClipOval(
+                    child: user.image!.isNotEmpty
+                        ? Image.network(
+                            user.image!,
+                            height: 110,
+                            width: 110,
+                          )
+                        : const FlutterLogo(
+                            size: 90,
+                          ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                    child: Text(
+                      '${(user.name != null && user.name!.isNotEmpty) ? user.name : "Chưa cập nhật"}',
+                      style: const TextStyle(
+                          fontSize: AppDimens.text_size_16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.thirdColor),
+                    ),
+                  ),
+                  Text(
+                    '${(user.email != null && user.email!.isNotEmpty) ? user.email : "Chưa cập nhật"}',
+                    style: const TextStyle(
+                        fontSize: AppDimens.text_size_16,
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.thirdColor),
+                  ),
+                ],
+              ),
             ),
             Expanded(
               child: Container(
@@ -61,56 +82,89 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            height: 40,
-                            child: Text(
-                              'Name: ${(user.name != null && user.name!.isNotEmpty) ? user.name : "Chưa cập nhật"}',
-                              style: const TextStyle(
-                                  fontSize: AppDimens.text_size_16),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 30, top: 30),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: AppColor.greyColor,
+                                  borderRadius: BorderRadius.circular(5)),
+                              height: 40,
+                              child: Center(
+                                child: Text(
+                                  'Name: ${(user.name != null && user.name!.isNotEmpty) ? user.name : "Chưa cập nhật"}',
+                                  style: const TextStyle(
+                                      fontSize: AppDimens.text_size_16),
+                                ),
+                              ),
                             ),
                           ),
-                          SizedBox(
-                            height: 40,
-                            child: Text(
-                              'Email: ${(user.email != null && user.email!.isNotEmpty) ? user.email : "Chưaa cập nhật"}',
-                              style: const TextStyle(
-                                  fontSize: AppDimens.text_size_16),
+
+                          // SizedBox(
+                          //   height: 40,
+                          //   child: Text(
+                          //     'Email: ${(user.email != null && user.email!.isNotEmpty) ? user.email : "Chưaa cập nhật"}',
+                          //     style: const TextStyle(
+                          //         fontSize: AppDimens.text_size_16),
+                          //   ),
+                          // ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 30),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: AppColor.greyColor,
+                                  borderRadius: BorderRadius.circular(5)),
+                              height: 40,
+                              child: Center(
+                                child: Text(
+                                  'Address: ${(user.address != null && user.address!.isNotEmpty) ? user.address : "Chưa cập nhật"}',
+                                  style: const TextStyle(
+                                      fontSize: AppDimens.text_size_16),
+                                ),
+                              ),
                             ),
                           ),
-                          SizedBox(
-                            height: 40,
-                            child: Text(
-                              'Address: ${(user.address != null && user.address!.isNotEmpty) ? user.address : "Chưa cập nhật"}',
-                              style: const TextStyle(
-                                  fontSize: AppDimens.text_size_16),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 30,
-                            child: Text(
-                              'Phone: ${(user.phone != null && user.phone!.isNotEmpty) ? user.phone : "Chưa cập nhật"}',
-                              style: const TextStyle(
-                                  fontSize: AppDimens.text_size_16),
+
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 30),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: AppColor.greyColor,
+                                  borderRadius: BorderRadius.circular(5)),
+                              height: 40,
+                              child: Center(
+                                child: Text(
+                                  'Phone: ${(user.phone != null && user.phone!.isNotEmpty) ? user.phone : "Chưa cập nhật"}',
+                                  style: const TextStyle(
+                                      fontSize: AppDimens.text_size_16),
+                                ),
+                              ),
                             ),
                           ),
                           const SizedBox(
-                            height: 60,
+                            height: 40,
                           ),
-                          Bunttoncomponent(
-                            colorText: AppColor.thirdColor,
-                            colorButton: AppColor.secondColor,
-                            onTap: changeInfo,
-                            textButton: 'Change Info',
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Bunttoncomponent(
-                            colorText: AppColor.thirdColor,
-                            colorButton: AppColor.redColor,
-                            onTap: signOutAccount,
-                            textButton: 'Sign Out',
-                          ),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Bunttoncomponent(
+                                height: 45.0,
+                                width: 150.0,
+                                colorText: AppColor.thirdColor,
+                                colorButton: AppColor.redColor,
+                                onTap: signOutAccount,
+                                textButton: 'Sign Out',
+                              ),
+                              Bunttoncomponent(
+                                height: 45.0,
+                                width: 150.0,
+                                colorText: AppColor.thirdColor,
+                                colorButton: AppColor.secondColor,
+                                onTap: changeInfo,
+                                textButton: 'Change Info',
+                              ),
+                            ],
+                          )
                         ]),
                   )),
             ),
