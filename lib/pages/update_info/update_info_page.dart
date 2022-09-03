@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:noteapp/components/buntton_component.dart';
 import 'package:noteapp/components/textfield_component.dart';
 import 'package:noteapp/model/user_model.dart';
@@ -84,6 +82,7 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
           appBar: AppBar(
+            backgroundColor: AppColor.secondColor,
             elevation: 0,
             actions: [
               TextButton(
