@@ -1,7 +1,6 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:noteapp/model/note_model.dart';
-import 'package:noteapp/pages/home_page/detail_note/detail_note_page.dart';
 import 'package:noteapp/pages/home_page/update_note/update_note_page.dart';
 import 'package:noteapp/service/api_service.dart';
 import 'package:noteapp/utils/app_colors.dart';

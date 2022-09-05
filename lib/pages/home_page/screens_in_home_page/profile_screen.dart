@@ -98,15 +98,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                           ),
-
-                          // SizedBox(
-                          //   height: 40,
-                          //   child: Text(
-                          //     'Email: ${(user.email != null && user.email!.isNotEmpty) ? user.email : "Chưaa cập nhật"}',
-                          //     style: const TextStyle(
-                          //         fontSize: AppDimens.text_size_16),
-                          //   ),
-                          // ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 30),
                             child: Container(
@@ -123,7 +114,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                           ),
-
                           Padding(
                             padding: const EdgeInsets.only(bottom: 30),
                             child: Container(
@@ -140,10 +130,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            height: 40,
-                          ),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -180,7 +166,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Dialogs.showProgressDialog(context);
 
     // Sign out
-
     Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
       pageBuilder: (BuildContext context, Animation animation,
           Animation secondaryAnimation) {
